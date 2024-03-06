@@ -6,6 +6,40 @@ servers:
   - url: 'https://example.com/api'
 
 paths:
+  /groups/{groupid}:
+    get:
+      tags:
+        - get-group-info-api
+      summary: Get group info by group id.
+      description: |
+        ## Dependency
+        - MySQL
+          - group_info
+          - users
+          - user_group
+
+        ## Inner Spec
+        TBD
+      parameters:
+        - $ref: '#/components/parameters/GroupIdPath/'
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateGroupResponseExample'
+        '400':
+          description: Invalid request, headers
+        '401':
+          description: Unauthorized
+        '500':
+          description: DB, dependency or unknown system error.
+
   /groups:
     post:
       tags:
@@ -53,6 +87,18 @@ paths:
 
 components:
   schemas:
+    GetGroupResponse:
+      type: object
+      required:
+        - groupInfo
+        - usersInfo
+      properties:
+        groupInfo:
+          $ref: '#/components/schemas/GroupInfo'
+        usersInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserInfo'
     CreateGroupResponse:
       type: object
       required:
@@ -143,6 +189,8 @@ components:
           description: users name to be added into the group
 
   examples:
+    GetGroupResponseExample:
+      $ref: '#/components/examples/CreateGroupResponseExample'
     CreateGroupResponseExample:
       value:
         groupInfo:
@@ -176,3 +224,13 @@ components:
           - "banana"
           - "grape"
 
+  parameters:
+    GroupIdPath:
+      name: groupId
+      in: path
+      required: true
+      description: unique group id.
+      schema:
+        type: string
+        format: uuid
+        example: "834q4510-e89b-12d3-a456-426614174000"
