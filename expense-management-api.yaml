@@ -6,6 +6,47 @@ servers:
   - url: 'https://example.com/api'
 
 paths:
+  /groups/{groupId}/loans:
+    post:
+      tags:
+        - create-loan-api
+      summary: Create new loan for specifit id.
+      description: |
+        ## Dependencies
+        - MySQL
+          - transaction_history
+          - loans
+          - loan_obligations
+
+        ## Inner Spec
+        ### What will happen when this API is called.
+        - A new record will be inserted into __transaction_history__ table
+        - A new record will be inserted into __loans__ table
+        - A new record will be inserted into __loan_obligations__ table
+      parameters:
+        - $ref: '#/components/parameters/GroupIdPath/'
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateLoanRequestExample'
+
+      responses:
+        '201':
+          description: Loan was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLoanResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateLoanResponseExample'
+
   /groups/{groupid}:
     get:
       tags:
@@ -19,7 +60,7 @@ paths:
           - user_group
 
         ## Inner Spec
-        TBD
+        get group info and users info.
       parameters:
         - $ref: '#/components/parameters/GroupIdPath/'
 
@@ -87,6 +128,19 @@ paths:
 
 components:
   schemas:
+    CreateLoanRequest:
+      $ref: '#/components/schemas/LoanRequest'
+
+    CreateLoanResponse:
+      type: object
+      required:
+        - loan
+        - obligation
+      properties:
+        loan:
+          $ref: '#/components/schemas/LoanResponse'
+        obligation:
+          $ref: '#/components/schemas/Obligation'
     GetGroupResponse:
       type: object
       required:
@@ -111,6 +165,124 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserInfo'
+    Obligation:
+      type: object
+      required:
+        - uuid
+        - loanId
+        - userId
+        - amount
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: uuid of the obligation
+        loanId:
+          type: string
+          format: uuid
+          description: uuid of the loan id
+        userId:
+          type: string
+          format: uuid
+          description: user id who need ot pay
+        amount:
+          type: integer
+          description: amount that needed to pay.
+    LoanResponse:
+      type: object
+      required:
+        - uuid
+        - transactionId
+        - title
+        - amount
+        - date
+        - payerId
+        - detail
+        - transaction
+      properties:
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: integer
+          description: amount of the loan
+        payerId:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+        obligationAmount:
+          type: integer
+          description: the amount the obligation user need to repayment
+        obligationUserId:
+          type: integer
+          description: obligation user id
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      required:
+        - uuid
+        - type
+        - groupId
+        - createdAt
+        - updatedAt
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: transaction id
+        type:
+          type: string
+          format: enum
+          enum:
+            - "Loan"
+            - "Repayment"
+          description: transaction type
+        groupId:
+          type: string
+          format: uuid
+          description: group id that has this
+        createdAt:
+          type: string
+          format: date-time
+          description: date when group was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: date when group info was updated.
+    LoanRequest:
+      type: object
+      required:
+        - title
+        - amount
+        - date
+        - payerId
+        - detail
+        - obligationAmount
+        - obligationUserId
+      properties:
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: integer
+          description: amount of the loan
+        payerId:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+        obligationAmount:
+          type: integer
+          description: the amount the obligation user need to repayment
+        obligationUserId:
+          type: integer
+          description: obligation user id
     GroupInfo:
       type: object
       required:
@@ -189,6 +361,36 @@ components:
           description: users name to be added into the group
 
   examples:
+    CreateLoanRequestExample:
+      value:
+        title: "リゴレット"
+        amount: 10000
+        date: "2023-12-31T23:59:59Z"
+        payerId: "76e4a9e0-df3b-11ec-9d64-0242ac120002"
+        details: "ピザを食べました。"
+        obligationAmount: 500
+        obligationUserId: "76e4a9e0-df3b-11ec-9d64-0242ac120002"
+    CreateLoanResponseExample:
+      value:
+        loan:
+          uuid: "123e4567-e89b-12d3-a456-426614174000"
+          transactionId: "123e4567-e89b-12d3-a456-426614174001"
+          title: "Dinner Out"
+          amount: 150
+          date: "2023-04-15T19:00:00Z"
+          payerId: "123e4567-e89b-12d3-a456-426614174002"
+          detail: "Dinner with friends at Italian restaurant."
+          transaction:
+            uuid: "123e4567-e89b-12d3-a456-426614174001"
+            type: "Loan"
+            groupId: "123e4567-e89b-12d3-a456-426614174003"
+            createdAt: "2023-04-15T18:30:00Z"
+            updatedAt: "2023-04-15T18:45:00Z"
+        obligation:
+          uuid: "123e4567-e89b-12d3-a456-426614174004"
+          loanId: "123e4567-e89b-12d3-a456-426614174000"
+          userId: "123e4567-e89b-12d3-a456-426614174005"
+          amount: 75
     GetGroupResponseExample:
       $ref: '#/components/examples/CreateGroupResponseExample'
     CreateGroupResponseExample:
