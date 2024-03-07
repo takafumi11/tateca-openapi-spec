@@ -6,11 +6,50 @@ servers:
   - url: 'https://example.com/api'
 
 paths:
+  /groups/{groupId}/repayments:
+    post:
+      tags:
+        - create-repayment-api
+      summary: Create new repayment
+      description: |
+        ## Dependencies
+        - MySQL
+          - transaction_history
+          - repayment_history
+        
+        ## Inner Spec
+        ### What will happen when this API is called.
+        - A new record will be inserted into __transaction_history__ table
+        - A new record will be inserted into __repayment_history__ table
+
+      parameters:
+        - $ref: '#/components/parameters/GroupIdPath/'
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRepaymentRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateRepaymentRequestExample'
+
+      responses:
+        '201':
+          description: Loan was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRepaymentResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateRepaymentResponseExample'
   /groups/{groupId}/loans:
     post:
       tags:
         - create-loan-api
-      summary: Create new loan for specifit id.
+      summary: Create new loan
       description: |
         ## Dependencies
         - MySQL
@@ -46,7 +85,6 @@ paths:
               examples:
                 regular:
                   $ref: '#/components/examples/CreateLoanResponseExample'
-
   /groups/{groupid}:
     get:
       tags:
@@ -128,8 +166,100 @@ paths:
 
 components:
   schemas:
+    CreateRepaymentRequest:
+      type: object
+      required:
+        - amount
+        - date
+        - payerId
+        - recipient
+        - detail
+      properties:
+        amount:
+          type: integer
+          description: amount that payer payed to recipient.
+        date:
+          type: string
+          format: date-time
+          description: date when repayment occured
+        payerId:
+          type: string
+          format: uuid
+          description: payer who returned money
+        recipient:
+          type: string
+          format: uuid
+          description: recipient who received money
+        detail:
+          type: string
+          description: note
     CreateLoanRequest:
-      $ref: '#/components/schemas/LoanRequest'
+      type: object
+      required:
+        - title
+        - amount
+        - date
+        - payerId
+        - detail
+        - obligationAmount
+        - obligationUserId
+      properties:
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: integer
+          description: amount of the loan
+        payerId:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+        obligationAmount:
+          type: integer
+          description: the amount the obligation user need to repayment
+        obligationUserId:
+          type: integer
+          description: obligation user id
+    CreateRepaymentResponse:
+      type: object
+      required:
+        - uuid
+        - transactionId
+        - amount
+        - date
+        - payerId
+        - recipientId
+        - detail
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: repayment id created
+        transactionId:
+          type: string
+          format: uuid
+          description: transaction id linked
+        amount:
+          type: integer
+          description: amount that payer payed to recipient.
+        date:
+          type: string
+          format: date-time
+          description: date when repayment occured
+        payerId:
+          type: string
+          format: uuid
+          description: payer who returned money
+        recipient:
+          type: string
+          format: uuid
+          description: recipient who received money
+        detail:
+          type: string
+          description: note
     CreateLoanResponse:
       type: object
       required:
@@ -137,7 +267,7 @@ components:
         - obligations
       properties:
         loan:
-          $ref: '#/components/schemas/LoanAndTransaction'
+          $ref: '#/components/schemas/Loan'
         obligations:
           type: array
           items:
@@ -189,7 +319,7 @@ components:
         amount:
           type: integer
           description: amount that needed to pay.
-    LoanAndTransaction:
+    Loan:
       type: object
       required:
         - uuid
@@ -200,12 +330,24 @@ components:
         - payerId
         - detail
       properties:
+        uuid:
+          type: string
+          format: uuid
+          description: id of the loan
+        transactionId:
+          type: string
+          format: uuid
+          description: transaction id that is linked with
         title:
           type: string
           description: title of the loan
         amount:
           type: integer
           description: amount of the loan
+        date:
+          type: string
+          format: date-time
+          description: date when loan occured
         payerId:
           type: string
           format: uuid
@@ -213,12 +355,6 @@ components:
         detail:
           type: string
           description: detail of the loan
-        obligationAmount:
-          type: integer
-          description: the amount the obligation user need to repayment
-        obligationUserId:
-          type: integer
-          description: obligation user id
     Transaction:
       type: object
       required:
@@ -243,36 +379,6 @@ components:
           type: string
           format: uuid
           description: group id that has this l
-    LoanRequest:
-      type: object
-      required:
-        - title
-        - amount
-        - date
-        - payerId
-        - detail
-        - obligationAmount
-        - obligationUserId
-      properties:
-        title:
-          type: string
-          description: title of the loan
-        amount:
-          type: integer
-          description: amount of the loan
-        payerId:
-          type: string
-          format: uuid
-          description: payer id
-        detail:
-          type: string
-          description: detail of the loan
-        obligationAmount:
-          type: integer
-          description: the amount the obligation user need to repayment
-        obligationUserId:
-          type: integer
-          description: obligation user id
     GroupInfo:
       type: object
       required:
@@ -351,6 +457,22 @@ components:
           description: users name to be added into the group
 
   examples:
+    CreateRepaymentRequestExample:
+      value:
+        amount: 500
+        date: "2023-04-30T15:00:00Z"
+        payerId: "123e4567-e89b-12d3-a456-426614174000"
+        recipient: "89e4567-e89b-12d3-a456-426614174123"
+        detail: "April's rent"
+    CreateRepaymentResponseExample:
+      value:
+        uuid: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
+        transactionId: "0p6o5n4m-3l2k1j-9i8h7g-6f5e-4d3c2b1a0p9o"
+        amount: 500
+        date: "2023-04-30T15:00:00Z"
+        payerId: "123e4567-e89b-12d3-a456-426614174000"
+        recipientId: "89e4567-e89b-12d3-a456-426614174123"
+        detail: "April's rent"
     CreateLoanRequestExample:
       value:
         title: "リゴレット"
