@@ -166,13 +166,13 @@ paths:
 
 components:
   schemas:
-    CreateRepaymentRequest:
+    RepaymentBase:
       type: object
       required:
         - amount
         - date
         - payerId
-        - recipient
+        - recipientId
         - detail
       properties:
         amount:
@@ -181,18 +181,37 @@ components:
         date:
           type: string
           format: date-time
-          description: date when repayment occured
+          description: date when repayment occurred
         payerId:
           type: string
           format: uuid
           description: payer who returned money
-        recipient:
+        recipientId:
           type: string
           format: uuid
           description: recipient who received money
         detail:
           type: string
           description: note
+    CreateRepaymentRequest:
+      allOf:
+        - $ref: '#/components/schemas/RepaymentBase'
+    CreateRepaymentResponse:
+      allOf:
+        - $ref: '#/components/schemas/RepaymentBase'
+        - type: object
+          required:
+            - uuid
+            - transactionId
+          properties:
+            uuid:
+              type: string
+              format: uuid
+              description: repayment id created
+            transactionId:
+              type: string
+              format: uuid
+              description: transaction id linked
     CreateLoanRequest:
       type: object
       required:
@@ -223,43 +242,6 @@ components:
         obligationUserId:
           type: integer
           description: obligation user id
-    CreateRepaymentResponse:
-      type: object
-      required:
-        - uuid
-        - transactionId
-        - amount
-        - date
-        - payerId
-        - recipientId
-        - detail
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          description: repayment id created
-        transactionId:
-          type: string
-          format: uuid
-          description: transaction id linked
-        amount:
-          type: integer
-          description: amount that payer payed to recipient.
-        date:
-          type: string
-          format: date-time
-          description: date when repayment occured
-        payerId:
-          type: string
-          format: uuid
-          description: payer who returned money
-        recipient:
-          type: string
-          format: uuid
-          description: recipient who received money
-        detail:
-          type: string
-          description: note
     CreateLoanResponse:
       type: object
       required:
@@ -462,7 +444,7 @@ components:
         amount: 500
         date: "2023-04-30T15:00:00Z"
         payerId: "123e4567-e89b-12d3-a456-426614174000"
-        recipient: "89e4567-e89b-12d3-a456-426614174123"
+        recipientId: "89e4567-e89b-12d3-a456-426614174123"
         detail: "April's rent"
     CreateRepaymentResponseExample:
       value:
