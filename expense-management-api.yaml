@@ -6,6 +6,47 @@ servers:
   - url: 'https://example.com/api'
 
 paths:
+  /groups/{groupId}/loans:
+    post:
+      tags:
+        - create-loan-api
+      summary: Create new loan for specifit id.
+      description: |
+        ## Dependencies
+        - MySQL
+          - transaction_history
+          - loans
+          - loan_obligations
+
+        ## Inner Spec
+        ### What will happen when this API is called.
+        - A new record will be inserted into __transaction_history__ table
+        - A new record will be inserted into __loans__ table
+        - A new record will be inserted into __loan_obligations__ table
+      parameters:
+        - $ref: '#/components/parameters/GroupIdPath/'
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateLoanRequestExample'
+
+      responses:
+        '201':
+          description: Loan was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLoanResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateLoanResponseExample'
+
   /groups/{groupid}:
     get:
       tags:
@@ -19,7 +60,7 @@ paths:
           - user_group
 
         ## Inner Spec
-        TBD
+        get group info and users info.
       parameters:
         - $ref: '#/components/parameters/GroupIdPath/'
 
@@ -87,6 +128,20 @@ paths:
 
 components:
   schemas:
+    CreateLoanRequest:
+      $ref: '#/components/schemas/LoanRequest'
+    CreateLoanResponse:
+      type: object
+      required:
+        - loan
+        - obligations
+      properties:
+        loan:
+          $ref: '#/components/schemas/LoanAndTransaction'
+        obligations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Obligation'
     GetGroupResponse:
       type: object
       required:
@@ -111,6 +166,113 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserInfo'
+    Obligation:
+      type: object
+      required:
+        - uuid
+        - loanId
+        - userId
+        - amount
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: uuid of the obligation
+        loanId:
+          type: string
+          format: uuid
+          description: uuid of the loan id
+        userId:
+          type: string
+          format: uuid
+          description: user id who need ot pay
+        amount:
+          type: integer
+          description: amount that needed to pay.
+    LoanAndTransaction:
+      type: object
+      required:
+        - uuid
+        - transactionId
+        - title
+        - amount
+        - date
+        - payerId
+        - detail
+      properties:
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: integer
+          description: amount of the loan
+        payerId:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+        obligationAmount:
+          type: integer
+          description: the amount the obligation user need to repayment
+        obligationUserId:
+          type: integer
+          description: obligation user id
+    Transaction:
+      type: object
+      required:
+        - uuid
+        - type
+        - groupId
+        - createdAt
+        - updatedAt
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: transaction id
+        type:
+          type: string
+          format: enum
+          enum:
+            - "Loan"
+            - "Repayment"
+          description: transaction type
+        groupId:
+          type: string
+          format: uuid
+          description: group id that has this l
+    LoanRequest:
+      type: object
+      required:
+        - title
+        - amount
+        - date
+        - payerId
+        - detail
+        - obligationAmount
+        - obligationUserId
+      properties:
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: integer
+          description: amount of the loan
+        payerId:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+        obligationAmount:
+          type: integer
+          description: the amount the obligation user need to repayment
+        obligationUserId:
+          type: integer
+          description: obligation user id
     GroupInfo:
       type: object
       required:
@@ -189,6 +351,34 @@ components:
           description: users name to be added into the group
 
   examples:
+    CreateLoanRequestExample:
+      value:
+        title: "リゴレット"
+        amount: 10000
+        date: "2023-12-31T23:59:59Z"
+        payerId: "76e4a9e0-df3b-11ec-9d64-0242ac120002"
+        details: "ピザを食べました。"
+        obligationAmount: 500
+        obligationUserId: "76e4a9e0-df3b-11ec-9d64-0242ac120002"
+    CreateLoanResponseExample:
+      value:
+        loan:
+          uuid: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
+          transactionId: "0p6o5n4m-3l2k1j-9i8h7g-6f5e-4d3c2b1a0p9o"
+          title: "Group Dinner"
+          amount: 200
+          date: "2023-05-20T18:30:00Z"
+          payerId: "4d3c2b1a-0p9o8n-7m6l-5k4j-3i2h1g0f9e8d"
+          detail: "Dinner at Joe's Diner with the team."
+        obligations:
+          - uuid: "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u"
+            loanId: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
+            userId: "9t8s7r-6q5p-4o3n-2m1l-0k9j8i7h6g5f"
+            amount: 100
+          - uuid: "6g5f4d3s-2a1b-0p9o-8n7m-6l5k4j3i2h1g"
+            loanId: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
+            userId: "1g2h3i-4j5k-6l7m-8n9o-0p1q2r3s4t5u"
+            amount: 100
     GetGroupResponseExample:
       $ref: '#/components/examples/CreateGroupResponseExample'
     CreateGroupResponseExample:
