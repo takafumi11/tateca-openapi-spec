@@ -6,6 +6,46 @@ servers:
   - url: 'https://example.com/api'
 
 paths:
+  /groups/{groupId}/transactions:
+    get:
+      tags:
+        - transactions
+      summary: Get transaction history for a group
+      description: Returns the latest transaction history for the specified group, sorted by creation date.
+      parameters:
+        - $ref: '#/components/parameters/GroupIdPath/'
+        - name: count
+          in: query
+          description: The number of transactions to return.
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: A list of transactions.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - transactions
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+              examples:
+                loanTransaction:
+                  $ref: '#/components/examples/LoanTransactionExample'
+        '400':
+          description: Invalid request parameters.
+        '404':
+          description: Group not found.
+        '401':
+          description: Unauthorized.
+        '500':
+          description: Server error.
   /groups/{groupId}/repayments:
     post:
       tags:
@@ -510,6 +550,50 @@ components:
         amount:
           type: integer
           description: amount that needed to pay.
+    Transaction:
+      type: object
+      required:
+        - transactionId
+        - type
+        - groupId
+        - createdAt
+        - updatedAt
+        - details
+      properties:
+        transactionId:
+          type: integer
+          description: The unique identifier for the transaction.
+        type:
+          type: string
+          enum:
+            - LOAN
+            - REPAYMENT
+          description: The type of the transaction.
+        groupId:
+          type: integer
+          description: The group ID associated with the transaction.
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp when the transaction was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The timestamp when the transaction was last updated.
+        details:
+          oneOf:
+            - $ref: '#/components/schemas/Loan'
+            - type: object
+              properties:
+                repaymentDetails:
+                  allOf:
+                    - $ref: '#/components/schemas/RepaymentBase'
+                    - $ref: '#/components/schemas/UUIDAndTransactionID'
+      discriminator:
+        propertyName: type
+        mapping:
+          LOAN: '#/components/schemas/Loan'
+          REPAYMENT: '#/components/schemas/RepaymentBase'
     Loan:
       type: object
       required:
@@ -546,30 +630,6 @@ components:
         detail:
           type: string
           description: detail of the loan
-    Transaction:
-      type: object
-      required:
-        - uuid
-        - type
-        - groupId
-        - createdAt
-        - updatedAt
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          description: transaction id
-        type:
-          type: string
-          format: enum
-          enum:
-            - "Loan"
-            - "Repayment"
-          description: transaction type
-        groupId:
-          type: string
-          format: uuid
-          description: group id that has this l
     GroupInfo:
       type: object
       required:
@@ -648,6 +708,34 @@ components:
           description: users name to be added into the group
 
   examples:
+    LoanTransactionExample:
+        value:
+          - transactionId: 1
+            type: "LOAN"
+            groupId: 101
+            createdAt: "2023-04-01T12:00:00Z"
+            updatedAt: "2023-04-01T12:00:00Z"
+            details:
+              uuid: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
+              transactionId: "0p6o5n4m-3l2k1j-9i8h7g-6f5e-4d3c2b1a0p9o"
+              title: "Group Dinner"
+              amount: 200
+              date: "2023-05-20T18:30:00Z"
+              payerId: "4d3c2b1a-0p9o8n-7m6l-5k4j-3i2h1g0f9e8d"
+              detail: "Dinner at Joe's Diner with the team."
+          - transactionId: 2
+            type: "REPAYMENT"
+            groupId: 102
+            createdAt: "2023-04-02T15:00:00Z"
+            updatedAt: "2023-04-02T15:00:00Z"
+            details:
+              uuid: "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q"
+              transactionId: "1p2o3n4m-5l6k-7j8i-9h0g-f9e8d7c6b5a4"
+              amount: 150
+              date: "2023-05-21T19:00:00Z"
+              payerId: "5d4c3b2a-1p0o-9n8m-7l6k-5j4i3h2g1f0e"
+              recipientId: "8h7g6f5e-4d3c-2b1a-0p9o-8n7m6l5k4j3i"
+              detail: "Repayment for the group dinner."
     CreateRepaymentRequestExample:
       value:
         amount: 500
