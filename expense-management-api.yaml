@@ -6,6 +6,43 @@ servers:
   - url: 'https://example.com/api'
 
 paths:
+  /groups/{groupId}/balances:
+      get:
+        tags:
+          - Balances
+        summary: Get balances for all users in a group
+        description: Returns the balance information for all users within the specified group.
+        parameters:
+          - name: groupId
+            in: path
+            required: true
+            description: The unique identifier of the group.
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: An array of balance information for each user in the group.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/UserBalance'
+                examples:
+                  userBalances:
+                    value:
+                      - balanceId: 1
+                        userId: 1
+                        groupId: 1
+                        balance: -49200.00
+                        createdAt: "2024-02-23T10:00:18.000+00:00"
+                        updatedAt: "2024-02-23T10:00:18.000+00:00"
+                      - balanceId: 2
+                        userId: 2
+                        groupId: 1
+                        balance: 49200.00
+                        createdAt: "2024-02-23T10:00:18.000+00:00"
+                        updatedAt: "2024-02-23T10:00:18.000+00:00"
   /groups/{groupId}/repayments:
     post:
       tags:
@@ -354,6 +391,37 @@ components:
             regular:
               $ref: '#/components/examples/CreateRepaymentResponseExample'
   schemas:
+    UserBalance:
+      type: object
+      required:
+        - balanceId
+        - userId
+        - groupId
+        - balance
+        - createdAt
+        - updatedAt
+      properties:
+        balanceId:
+          type: integer
+          description: The unique identifier for the balance entry.
+        userId:
+          type: integer
+          description: The unique identifier of the user.
+        groupId:
+          type: integer
+          description: The unique identifier of the group.
+        balance:
+          type: number
+          format: double
+          description: The current balance of the user within the group.
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp when the balance entry was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The timestamp when the balance entry was last updated.
     UUIDAndTransactionID:
       type: object
       required:
