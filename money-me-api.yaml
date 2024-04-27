@@ -386,6 +386,7 @@ paths:
               properties:
                 joinToken:
                   type: string
+                  format: uuid
                   description: The token required to join the group.
             examples:
               joinRequest:
@@ -764,11 +765,15 @@ components:
       type: object
       required:
         - groupName
+        - description
         - usersName
       properties:
         groupName:
           type: string
           description: group name to be created.
+        description:
+          type: string
+          description: description of the group.
         usersName:
           type: array
           items:
@@ -878,6 +883,7 @@ components:
     CreateGroupRequestBodyExample:
       value:
         groupName: "Fruits"
+        description: "This is a group for fruits!"
         usersName:
           - "apple"
           - "banana"
