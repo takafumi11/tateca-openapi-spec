@@ -45,7 +45,7 @@ paths:
       description: This endpoint updates a user's email(for now)
       parameters:
         - $ref: '#/components/parameters/Authorization'
-        - $ref: '#/components/parameters/UuidPath'
+        - $ref: '#/components/parameters/UserUuid'
 
       requestBody:
         description: Body to be updated
@@ -69,6 +69,26 @@ paths:
                   $ref: '#/components/examples/CreateUpdateUserResponseExample'
 
   /groups:
+    get:
+      tags:
+        - groups
+      summary: get-group-info-api
+      description: THis endpoint provides group's info
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupIdPath'
+
+      responses:
+        '201':
+          description: The group has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateGroupResponseExample'
+
     post:
       tags:
         - groups
@@ -127,11 +147,20 @@ components:
         type: string
         format: JWT
         example: "J.W.T"
-    UuidPath:
+    UserUuid:
       name: uuid
       in: path
       required: true
       description: user's uuid updated.
+      schema:
+        type: string
+        format: uuid
+        example: "789e4567-e89b-12d3-a456-426614174000"
+    GroupIdPath:
+      name: uuid
+      in: path
+      required: true
+      description: Group's uuid.
       schema:
         type: string
         format: uuid
@@ -191,6 +220,9 @@ components:
           items:
             type: string
           description: users name to be added into the group
+
+    GetGroupResponse:
+      $ref: '#/components/schemas/CreateGroupResponse'
 
     CreateGroupResponse:
       type: object
@@ -286,19 +318,19 @@ components:
           - uuid: "789e4567-e89b-12d3-a456-426614174000"
             name: "apple"
             email: "apple@example.com"
-            auth_user_id: "auth user id"
+            auth_user_id: "authUserId"
             createdAt: "2023-01-01T00:00:00+09:00"
             updatedAt: "2023-01-02T00:00:00+09:00"
           - uuid: "456e4567-e89b-12d3-a456-426614174000"
             name: "banana"
             email: ""
-            auth_user_id: "auth user id"
+            auth_user_id: "authUserId"
             createdAt: "2023-01-01T00:00:00+09:00"
             updatedAt: "2023-01-02T00:00:00+09:00"
           - uuid: "123e4567-e89b-12d3-a456-426614174001"
             name: "grape"
             email: ""
-            auth_user_id: "auth user id"
+            auth_user_id: "authUserId"
             createdAt: "2023-01-01T00:00:00+09:00"
             updatedAt: "2023-01-02T00:00:00+09:00"
 
@@ -326,6 +358,6 @@ components:
         uuid: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
         name: "山田 花子"
         email: "hanako-yamada@gmail.com"
-        auth_user_id: "auth user id"
+        auth_user_id: "authUserId"
         created_at: "2023-04-01T12:00:00+09:00"
         updated_at: "2023-04-01T12:00:00+09:00"
