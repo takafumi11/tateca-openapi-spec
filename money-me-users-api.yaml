@@ -175,11 +175,11 @@ components:
     CreateGroupRequest:
       type: object
       required:
-        - uuid
+        - user_uuid
         - group_name
         - users_name
       properties:
-        uuid:
+        user_uuid:
           type: string
           format: uuid
           description: user's uuid who creates this group. muse be already signed in.
@@ -304,7 +304,7 @@ components:
 
     CreateGroupRequestBodyExample:
       value:
-        uuid: "789e4567-e89b-12d3-a456-426614174000"
+        user_uuid: "789e4567-e89b-12d3-a456-426614174000"
         group_name: "Fruits"
         users_name:
           - "apple"
