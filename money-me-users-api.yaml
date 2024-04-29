@@ -141,10 +141,10 @@ paths:
       tags:
         - loans
       summary: Create new loan
-      description: aa
+      description: new loan will be created
 
       parameters:
-        - $ref: '#/components/parameters/GroupIdPath/'
+        - $ref: '#/components/parameters/Authorization/'
 
       requestBody:
         description: body to set crated.
@@ -166,6 +166,36 @@ paths:
               examples:
                 regular:
                   $ref: '#/components/examples/CreateLoanResponseExample'
+  /repayments:
+    post:
+      tags:
+        - repayments
+      summary: Create new repayment
+      description: new repayment will be created
+
+      parameters:
+        - $ref: '#/components/parameters/Authorization/'
+
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRepaymentRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateRepaymentRequestExample'
+      responses:
+        '201':
+          description: Loan was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRepaymentResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateRepaymentResponseExample'
 
 components:
   parameters:
@@ -268,6 +298,97 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ObligationRequest'
+
+    CreateRepaymentRequest:
+      type: object
+      required:
+        - group_id
+        - repayment_info
+      properties:
+        group_id:
+          type: string
+          description: "group id created a loan with"
+        repayment_info:
+          $ref: '#/components/schemas/RepaymentRequest'
+
+    RepaymentRequest:
+      type: object
+      required:
+        - title
+        - amount
+        - date
+        - payer_id
+        - recipient_id
+        - detail
+      properties:
+        title:
+          type: string
+          description: "title of the repayment"
+        amount:
+          type: integer
+          description: "amount payed to recipient"
+        date:
+          type: string
+          format: date-time
+          description: "date when repayment occurred"
+        payer_id:
+          type: string
+          format: uuid
+          description: "person who returned money"
+        recipient_id:
+          type: string
+          format: uuid
+          description: "person who received money"
+        detail:
+          type: string
+          description: "note about the repayment"
+
+    CreateRepaymentResponse:
+      type: object
+      required:
+        - uuid
+        - title
+        - amount
+        - date
+        - payer_id
+        - recipient_id
+        - detail
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: "id of the repayment"
+        title:
+          type: string
+          description: "title of the repayment"
+        amount:
+          type: integer
+          description: "amount paid to recipient"
+        date:
+          type: string
+          format: date-time
+          description: "date when repayment occurred"
+        payer_id:
+          type: string
+          format: uuid
+          description: "person who returned money"
+        recipient_id:
+          type: string
+          format: uuid
+          description: "person who received money"
+        detail:
+          type: string
+          description: "note about the repayment"
+        created_at:
+          type: string
+          format: date-time
+          description: "Creation date."
+        updated_at:
+          type: string
+          format: date-time
+          description: "Update date."
 
     LoanRequest:
       type: object
@@ -518,6 +639,17 @@ components:
           - amount: 7500.00
             user_uuid: "123e4567-e89b-12d3-a456-426614174000"
 
+    CreateRepaymentRequestExample:
+      value:
+        group_id: "123e4567-e89b-12d3-a456-426614174000"
+        repayment_info:
+          title: "Monthly Installment"
+          amount: 500
+          date: "2023-04-01T12:00:00+09:00"
+          payer_id: "123e4567-e89b-12d3-a456-426614174001"
+          recipient_id: "123e4567-e89b-12d3-a456-426614174002"
+          detail: "October installment payment"
+
     CreateLoanResponseExample:
       value:
         loan:
@@ -535,6 +667,18 @@ components:
             amount: 7500
             createdAt: "2023-01-01T00:00:00+09:00"
             updatedAt: "2023-01-02T00:00:00+09:00"
+
+    CreateRepaymentResponseExample:
+      value:
+        uuid: "123e4567-e89b-12d3-a456-426614174000"
+        title: "Monthly Installment"
+        amount: 500
+        date: "2023-10-05T14:48:00Z"
+        payer_id: "123e4567-e89b-12d3-a456-426614174001"
+        recipient_id: "123e4567-e89b-12d3-a456-426614174002"
+        detail: "October installment payment"
+        createdAt: "2023-01-01T00:00:00+09:00"
+        updatedAt: "2023-01-02T00:00:00+09:00"
 
     CreateGroupRequestBodyExample:
       value:
