@@ -136,6 +136,37 @@ paths:
         '500':
           description: DB, dependency or unknown system error.
 
+  /loans:
+    post:
+      tags:
+        - loans
+      summary: Create new loan
+      description: aa
+
+      parameters:
+        - $ref: '#/components/parameters/GroupIdPath/'
+
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateLoanRequestExample'
+      responses:
+        '201':
+          description: Loan was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLoanResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateLoanResponseExample'
+
 components:
   parameters:
     Authorization:
@@ -220,6 +251,146 @@ components:
           items:
             type: string
           description: users name to be added into the group
+
+    CreateLoanRequest:
+      type: object
+      required:
+        - group_id
+        - loan_info
+        - obligations_info
+      properties:
+        group_id:
+          type: string
+          description: "group id created a loan with"
+        loan_info:
+          $ref: '#/components/schemas/LoanRequest'
+        obligations_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObligationRequest'
+
+    LoanRequest:
+      type: object
+      required:
+        - title
+        - amount
+        - date
+        - payer_id
+        - detail
+      properties:
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: integer
+          description: amount of the loan
+        payer_id:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+
+    ObligationRequest:
+      type: object
+      required:
+        - amount
+        - user_uuid
+      properties:
+        amount:
+          type: double
+          format: decimal
+          description: obligation amount
+        user_uuid:
+          type: string
+          format: uuid
+          description: user's uuid needed to re-pay
+
+    CreateLoanResponse:
+      type: object
+      required:
+        - loan
+        - obligation
+      properties:
+        loan:
+          $ref: '#/components/schemas/LoanResponse'
+        obligations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObligationResponse'
+
+    LoanResponse:
+      type: object
+      required:
+        - uuid
+        - transactionId
+        - title
+        - amount
+        - date
+        - payer_id
+        - detail
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: id of the loan
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: double
+          format: decimal
+          description: amount of the loan
+        date:
+          type: string
+          format: date-time
+          description: date when loan occured
+        payer_id:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date.
+        updated_at:
+          type: string
+          format: date-time
+          description: Update date.
+    ObligationResponse:
+      type: object
+      required:
+        - uuid
+        - user_uuid
+        - amount
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: uuid of the obligation
+        user_uuid:
+          type: string
+          format: uuid
+          description: user id who need ot pay
+        amount:
+          type: integer
+          description: amount that needed to pay.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date.
+        updated_at:
+          type: string
+          format: date-time
+          description: Update date.
 
     GetGroupResponse:
       $ref: '#/components/schemas/CreateGroupResponse'
@@ -331,6 +502,37 @@ components:
             name: "grape"
             email: ""
             auth_user_id: "authUserId"
+            createdAt: "2023-01-01T00:00:00+09:00"
+            updatedAt: "2023-01-02T00:00:00+09:00"
+
+    CreateLoanRequestExample:
+      value:
+        group_id: "123e4567-e89b-12d3-a456-426614174000"
+        loan_info:
+          title: "Car Loan"
+          amount: 15000
+          date: "2023-04-01T12:00:00+09:00"
+          payer_id: "123e4567-e89b-12d3-a456-426614174000"
+          detail: "Loan for buying a new car"
+        obligations_info:
+          - amount: 7500.00
+            user_uuid: "123e4567-e89b-12d3-a456-426614174000"
+
+    CreateLoanResponseExample:
+      value:
+        loan:
+          uuid: "123e4567-e89b-12d3-a456-426614174000"
+          title: "Car Loan"
+          amount: 15000.00
+          date: "2023-10-05T14:48:00Z"
+          payer_id: "123e4567-e89b-12d3-a456-426614174000"
+          detail: "Loan for buying a new car"
+          createdAt: "2023-01-01T00:00:00+09:00"
+          updatedAt: "2023-01-02T00:00:00+09:00"
+        obligations:
+          - uuid: "123e4567-e89b-12d3-a456-426614174001"
+            user_uuid: "123e4567-e89b-12d3-a456-426614174002"
+            amount: 7500
             createdAt: "2023-01-01T00:00:00+09:00"
             updatedAt: "2023-01-02T00:00:00+09:00"
 
