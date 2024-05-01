@@ -1,0 +1,777 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Money Mates API
+servers:
+  - url: 'https://example.com/api'
+
+paths:
+  /users:
+    post:
+      tags:
+        - users
+      summary: create-user-api
+      description: This endpoint creates a new user in the system.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+
+      requestBody:
+        description: Body to be inserted
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateUserRequestExample'
+
+      responses:
+        '201':
+          description: A user is created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateUpdateUserResponseExample'
+
+  /users/{uuid}:
+    patch:
+      tags:
+        - users
+      summary: update-user-api
+      description: This endpoint updates a user's email(for now)
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/UserUuid'
+
+      requestBody:
+        description: Body to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/UpdateUserRequestExample'
+      responses:
+        '200':
+          description: A user is created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUserResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateUpdateUserResponseExample'
+
+  /groups:
+    get:
+      tags:
+        - groups
+      summary: get-group
+      description: THis endpoint provides group's info
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupIdPath'
+
+      responses:
+        '201':
+          description: The group has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateGroupResponseExample'
+
+    post:
+      tags:
+        - groups
+      summary: crete-group
+      description: |
+        ## Dependencies
+        - MySQL
+          - groups
+          - users
+          - user_groups
+
+        ## Inner Spec
+        ### What will happen when this API is called.
+        - Create group with the group name and new record will be inserted into __groups__ table
+        - Create user with the users name and new record will be inserted into __users__ table
+        - New records will be inserted into __user_group__ table.
+
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateGroupRequestBodyExample'
+      responses:
+        '201':
+          description: The group has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateGroupResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateGroupResponseExample'
+        '400':
+          description: Invalid request, headers or body
+        '401':
+          description: Unauthorized
+        '500':
+          description: DB, dependency or unknown system error.
+
+  /loans:
+    post:
+      tags:
+        - loans
+      summary: create-loan
+      description: new loan will be created
+
+      parameters:
+        - $ref: '#/components/parameters/Authorization/'
+
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateLoanRequestExample'
+      responses:
+        '201':
+          description: Loan was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateLoanResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateLoanResponseExample'
+  /repayments:
+    post:
+      tags:
+        - repayments
+      summary: crete-repayment
+      description: new repayment will be created
+
+      parameters:
+        - $ref: '#/components/parameters/Authorization/'
+
+      requestBody:
+        description: body to set crated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRepaymentRequest'
+            examples:
+              regular:
+                $ref: '#/components/examples/CreateRepaymentRequestExample'
+      responses:
+        '201':
+          description: Loan was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRepaymentResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateRepaymentResponseExample'
+
+  /transactions:
+    get:
+      tags:
+        - transactions
+      summary: get-transactions
+      description: Get latest n transaction histories.
+      parameters:
+        - $ref: '#'#/components/parameters/Authorization'
+        - name: count
+          in: query
+          description: The number of transactions returned.
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of transactions.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - transactions
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GetTransactionsResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/GetTransactionsResponseExample'
+components:
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: authorization token provided from auth server (Firebase)
+      schema:
+        type: string
+        format: JWT
+        example: "J.W.T"
+    UserUuid:
+      name: uuid
+      in: path
+      required: true
+      description: user's uuid updated.
+      schema:
+        type: string
+        format: uuid
+        example: "789e4567-e89b-12d3-a456-426614174000"
+    GroupIdPath:
+      name: uuid
+      in: path
+      required: true
+      description: Group's uuid.
+      schema:
+        type: string
+        format: uuid
+        example: "789e4567-e89b-12d3-a456-426614174000"
+
+  schemas:
+    CreateUserRequest:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          description: User's name created
+        email:
+          type: string
+          format: email
+          description: User's email created
+
+    CreateUserResponse:
+      $ref: '#/components/schemas/UserResponse'
+
+    UpdateUserRequest:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          description: User's name updated
+        email:
+          type: string
+          format: email
+          description: User's email updated
+
+    UpdateUserResponse:
+      $ref: '#/components/schemas/UserResponse'
+
+    CreateGroupRequest:
+      type: object
+      required:
+        - user_uuid
+        - group_name
+        - users_name
+      properties:
+        user_uuid:
+          type: string
+          format: uuid
+          description: user's uuid who creates this group. muse be already signed in.
+        group_name:
+          type: string
+          description: group name to be created.
+        users_name:
+          type: array
+          items:
+            type: string
+          description: users name to be added into the group
+
+    CreateLoanRequest:
+      type: object
+      required:
+        - group_id
+        - loan_info
+        - obligations_info
+      properties:
+        group_id:
+          type: string
+          description: "group id created a loan with"
+        loan_info:
+          $ref: '#/components/schemas/LoanRequest'
+        obligations_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObligationRequest'
+
+    CreateRepaymentRequest:
+      type: object
+      required:
+        - group_id
+        - repayment_info
+      properties:
+        group_id:
+          type: string
+          description: "group id created a loan with"
+        repayment_info:
+          $ref: '#/components/schemas/RepaymentRequest'
+
+    RepaymentRequest:
+      type: object
+      required:
+        - title
+        - amount
+        - date
+        - payer_id
+        - recipient_id
+        - detail
+      properties:
+        title:
+          type: string
+          description: "title of the repayment"
+        amount:
+          type: integer
+          description: "amount payed to recipient"
+        date:
+          type: string
+          format: date-time
+          description: "date when repayment occurred"
+        payer_id:
+          type: string
+          format: uuid
+          description: "person who returned money"
+        recipient_id:
+          type: string
+          format: uuid
+          description: "person who received money"
+        detail:
+          type: string
+          description: "note about the repayment"
+
+    CreateRepaymentResponse:
+      type: object
+      required:
+        - uuid
+        - title
+        - amount
+        - date
+        - payer_id
+        - recipient_id
+        - detail
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: "id of the repayment"
+        title:
+          type: string
+          description: "title of the repayment"
+        amount:
+          type: integer
+          description: "amount paid to recipient"
+        date:
+          type: string
+          format: date-time
+          description: "date when repayment occurred"
+        payer_id:
+          type: string
+          format: uuid
+          description: "person who returned money"
+        recipient_id:
+          type: string
+          format: uuid
+          description: "person who received money"
+        detail:
+          type: string
+          description: "note about the repayment"
+        created_at:
+          type: string
+          format: date-time
+          description: "Creation date."
+        updated_at:
+          type: string
+          format: date-time
+          description: "Update date."
+
+    LoanRequest:
+      type: object
+      required:
+        - title
+        - amount
+        - date
+        - payer_id
+        - detail
+      properties:
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: integer
+          description: amount of the loan
+        payer_id:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+
+    ObligationRequest:
+      type: object
+      required:
+        - amount
+        - user_uuid
+      properties:
+        amount:
+          type: double
+          format: decimal
+          description: obligation amount
+        user_uuid:
+          type: string
+          format: uuid
+          description: user's uuid needed to re-pay
+
+    CreateLoanResponse:
+      type: object
+      required:
+        - loan
+        - obligations
+      properties:
+        loan:
+          $ref: '#/components/schemas/LoanResponse'
+        obligations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObligationResponse'
+
+    LoanResponse:
+      type: object
+      required:
+        - uuid
+        - transactionId
+        - title
+        - amount
+        - date
+        - payer_id
+        - detail
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: id of the loan
+        title:
+          type: string
+          description: title of the loan
+        amount:
+          type: double
+          format: decimal
+          description: amount of the loan
+        date:
+          type: string
+          format: date-time
+          description: date when loan occured
+        payer_id:
+          type: string
+          format: uuid
+          description: payer id
+        detail:
+          type: string
+          description: detail of the loan
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date.
+        updated_at:
+          type: string
+          format: date-time
+          description: Update date.
+    ObligationResponse:
+      type: object
+      required:
+        - uuid
+        - user_uuid
+        - amount
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: uuid of the obligation
+        user_uuid:
+          type: string
+          format: uuid
+          description: user id who need ot pay
+        amount:
+          type: integer
+          description: amount that needed to pay.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date.
+        updated_at:
+          type: string
+          format: date-time
+          description: Update date.
+
+    GetGroupResponse:
+      $ref: '#/components/schemas/CreateGroupResponse'
+
+    CreateGroupResponse:
+      type: object
+      required:
+        - group_info
+        - users_info
+      properties:
+        group_info:
+          $ref: '#/components/schemas/GroupResponse'
+        users_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponse'
+
+    GetTransactionsResponse:
+      type: object
+      oneOf:
+        - properties:
+            loan:
+              $ref: '#/components/schemas/CreateLoanResponse'
+        - properties:
+            repayment:
+              $ref: '#/components/schemas/CreateRepaymentResponse'
+
+    UserResponse:
+      type: object
+      required:
+        - uuid
+        - name
+        - email
+        - auth_user_id
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: User's UUID. Human readable.
+        name:
+          type: string
+          description: User's name created
+        email:
+          type: string
+          format: email
+          description: User's email created
+        auth_user_id:
+          type: string
+          description: authorized user id. Retrieved from jwt generated by auth server(Firebase)
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date.
+        updated_at:
+          type: string
+          format: date-time
+          description: Update date.
+
+    GroupResponse:
+      type: object
+      required:
+        - uuid
+        - name
+        - join_token
+        - token_expires
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: uuid of the group.
+        name:
+          type: string
+          description: name of the group.
+        join_token:
+          type: string
+          format: uuid
+          description: token to be used when user join to this group.
+        token_expires:
+          type: string
+          format: date-time
+          description: date token will be expired.
+        created_at:
+          type: string
+          format: date-time
+          description: date when group was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: date when group info was updated.
+
+  examples:
+    CreateGroupResponseExample:
+      value:
+        group_info:
+          uuid: "123e4567-e89b-12d3-a456-426614174000"
+          name: "Fruits"
+          joinToken: "76e4a9e0-df3b-11ec-9d64-0242ac120002"
+          tokenExpires: "2023-12-31T23:59:59+09:00"
+          createdAt: "2023-01-01T00:00:00+09:00"
+          updatedAt: "2023-01-02T00:00:00+09:00"
+        users_info:
+          - uuid: "789e4567-e89b-12d3-a456-426614174000"
+            name: "apple"
+            email: "apple@example.com"
+            auth_user_id: "authUserId"
+            createdAt: "2023-01-01T00:00:00+09:00"
+            updatedAt: "2023-01-02T00:00:00+09:00"
+          - uuid: "456e4567-e89b-12d3-a456-426614174000"
+            name: "banana"
+            email: ""
+            auth_user_id: "authUserId"
+            createdAt: "2023-01-01T00:00:00+09:00"
+            updatedAt: "2023-01-02T00:00:00+09:00"
+          - uuid: "123e4567-e89b-12d3-a456-426614174001"
+            name: "grape"
+            email: ""
+            auth_user_id: "authUserId"
+            createdAt: "2023-01-01T00:00:00+09:00"
+            updatedAt: "2023-01-02T00:00:00+09:00"
+
+    CreateLoanRequestExample:
+      value:
+        group_id: "123e4567-e89b-12d3-a456-426614174000"
+        loan_info:
+          title: "Car Loan"
+          amount: 15000
+          date: "2023-04-01T12:00:00+09:00"
+          payer_id: "123e4567-e89b-12d3-a456-426614174000"
+          detail: "Loan for buying a new car"
+        obligations_info:
+          - amount: 7500.00
+            user_uuid: "123e4567-e89b-12d3-a456-426614174000"
+
+    CreateRepaymentRequestExample:
+      value:
+        group_id: "123e4567-e89b-12d3-a456-426614174000"
+        repayment_info:
+          title: "Monthly Installment"
+          amount: 500
+          date: "2023-04-01T12:00:00+09:00"
+          payer_id: "123e4567-e89b-12d3-a456-426614174001"
+          recipient_id: "123e4567-e89b-12d3-a456-426614174002"
+          detail: "October installment payment"
+
+    CreateLoanResponseExample:
+      value:
+        loan:
+          uuid: "123e4567-e89b-12d3-a456-426614174000"
+          title: "Car Loan"
+          amount: 15000.00
+          date: "2023-10-05T14:48:00Z"
+          payer_id: "123e4567-e89b-12d3-a456-426614174000"
+          detail: "Loan for buying a new car"
+          createdAt: "2023-01-01T00:00:00+09:00"
+          updatedAt: "2023-01-02T00:00:00+09:00"
+        obligations:
+          - uuid: "123e4567-e89b-12d3-a456-426614174001"
+            user_uuid: "123e4567-e89b-12d3-a456-426614174002"
+            amount: 7500
+            createdAt: "2023-01-01T00:00:00+09:00"
+            updatedAt: "2023-01-02T00:00:00+09:00"
+
+    CreateRepaymentResponseExample:
+      value:
+        uuid: "123e4567-e89b-12d3-a456-426614174000"
+        title: "Monthly Installment"
+        amount: 500
+        date: "2023-10-05T14:48:00Z"
+        payer_id: "123e4567-e89b-12d3-a456-426614174001"
+        recipient_id: "123e4567-e89b-12d3-a456-426614174002"
+        detail: "October installment payment"
+        createdAt: "2023-01-01T00:00:00+09:00"
+        updatedAt: "2023-01-02T00:00:00+09:00"
+
+    CreateGroupRequestBodyExample:
+      value:
+        user_uuid: "789e4567-e89b-12d3-a456-426614174000"
+        group_name: "Fruits"
+        users_name:
+          - "apple"
+          - "banana"
+          - "grape"
+
+    CreateUserRequestExample:
+      value:
+        user_name: "山田 花子"
+        email: "hanako-yamada@gmail.com"
+
+    UpdateUserRequestExample:
+      value:
+        user_name: "山田 花子"
+        email: "hanako-yamada@gmail.com"
+
+    CreateUpdateUserResponseExample:
+      value:
+        uuid: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
+        name: "山田 花子"
+        email: "hanako-yamada@gmail.com"
+        auth_user_id: "authUserId"
+        created_at: "2023-04-01T12:00:00+09:00"
+        updated_at: "2023-04-01T12:00:00+09:00"
+
+    GetTransactionsResponseExample:
+      - loan:
+          uuid: "123e4567-e89b-12d3-a456-426614174000"
+          title: "Car Loan"
+          amount: 15000.00
+          date: "2023-10-05T14:48:00Z"
+          payer_id: "123e4567-e89b-12d3-a456-426614174000"
+          detail: "Loan for buying a new car"
+          createdAt: "2023-01-01T00:00:00+09:00"
+          updatedAt: "2023-01-02T00:00:00+09:00"
+        obligations:
+          - uuid: "123e4567-e89b-12d3-a456-426614174001"
+            user_uuid: "123e4567-e89b-12d3-a456-426614174002"
+            amount: 7500
+            createdAt: "2023-01-01T00:00:00+09:00"
+            updatedAt: "2023-01-02T00:00:00+09:00"
+      - repayment:
+          uuid: "123e4567-e89b-12d3-a456-426614174000"
+          title: "Monthly Installment"
+          amount: 500
+          date: "2023-10-05T14:48:00Z"
+          payer_id: "123e4567-e89b-12d3-a456-426614174001"
+          recipient_id: "123e4567-e89b-12d3-a456-426614174002"
+          detail: "October installment payment"
+          createdAt: "2023-01-01T00:00:00+09:00"
+          updatedAt: "2023-01-02T00:00:00+09:00"
