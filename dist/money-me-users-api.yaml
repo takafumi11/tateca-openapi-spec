@@ -144,7 +144,7 @@ paths:
       description: new loan will be created
 
       parameters:
-        - $ref: '#/components/parameters/Authorization/'
+        - $ref: '#/components/parameters/Authorization'
 
       requestBody:
         description: body to set crated.
@@ -174,7 +174,7 @@ paths:
       description: new repayment will be created
 
       parameters:
-        - $ref: '#/components/parameters/Authorization/'
+        - $ref: '#/components/parameters/Authorization'
 
       requestBody:
         description: body to set crated.
@@ -204,7 +204,7 @@ paths:
       summary: get-transactions
       description: Get latest n transaction histories.
       parameters:
-        - $ref: '#'#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Authorization'
         - name: count
           in: query
           description: The number of transactions returned.
