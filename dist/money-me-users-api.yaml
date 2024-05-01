@@ -421,6 +421,49 @@ components:
           format: date-time
           description: "Update date."
 
+    GetTransactionsResponse:
+      type: object
+      required:
+        - transaction_id
+        - transaction_type
+        - title
+        - amount
+        - date
+        - payer
+        - target_user
+        - created_at
+      properties:
+        transaction_id:
+          type: string
+          format: uuid
+          description: "id of the loan or repayment"
+        transaction_type:
+          type: string
+          format: enum
+          description: "LOAN or REPAYMENT"
+        title:
+          type: string
+          description: "title of the repayment"
+        amount:
+          type: integer
+          description: "amount paid to recipient"
+        date:
+          type: string
+          format: date-time
+          description: "date when repayment occurred"
+        payer:
+          type: string
+          format: uuid
+          description: "person who payed money"
+        target_user:
+          type: string
+          format: uuid
+          description: "person who is targeted by payer"
+        created_at:
+          type: string
+          format: date-time
+          description: "Creation date."
+
     LoanRequest:
       type: object
       required:
@@ -559,16 +602,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserResponse'
-
-    GetTransactionsResponse:
-      type: object
-      oneOf:
-        - properties:
-            loan:
-              $ref: '#/components/schemas/CreateLoanResponse'
-        - properties:
-            repayment:
-              $ref: '#/components/schemas/CreateRepaymentResponse'
 
     UserResponse:
       type: object
@@ -750,28 +783,20 @@ components:
         updated_at: "2023-04-01T12:00:00+09:00"
 
     GetTransactionsResponseExample:
-      - loan:
-          uuid: "123e4567-e89b-12d3-a456-426614174000"
-          title: "Car Loan"
-          amount: 15000.00
-          date: "2023-10-05T14:48:00Z"
-          payer_id: "123e4567-e89b-12d3-a456-426614174000"
-          detail: "Loan for buying a new car"
-          createdAt: "2023-01-01T00:00:00+09:00"
-          updatedAt: "2023-01-02T00:00:00+09:00"
-        obligations:
-          - uuid: "123e4567-e89b-12d3-a456-426614174001"
-            user_uuid: "123e4567-e89b-12d3-a456-426614174002"
-            amount: 7500
-            createdAt: "2023-01-01T00:00:00+09:00"
-            updatedAt: "2023-01-02T00:00:00+09:00"
-      - repayment:
-          uuid: "123e4567-e89b-12d3-a456-426614174000"
+      value:
+        - transaction_id: "123e4567-e89b-12d3-a456-426614174000"
+          transaction_type: LOAN
           title: "Monthly Installment"
           amount: 500
-          date: "2023-10-05T14:48:00Z"
-          payer_id: "123e4567-e89b-12d3-a456-426614174001"
-          recipient_id: "123e4567-e89b-12d3-a456-426614174002"
-          detail: "October installment payment"
+          date: "2023-04-01T12:00:00+09:00"
+          payer: "123e4567-e89b-12d3-a456-426614174001"
+          target_user: "123e4567-e89b-12d3-a456-426614174002"
           createdAt: "2023-01-01T00:00:00+09:00"
-          updatedAt: "2023-01-02T00:00:00+09:00"
+        - transaction_id: "123e4567-e89b-12d3-a456-426614174000"
+          transaction_type: REPAYMENT
+          title: "Monthly Installment"
+          amount: 500
+          date: "2023-04-01T12:00:00+09:00"
+          payer: "123e4567-e89b-12d3-a456-426614174001"
+          target_user: "123e4567-e89b-12d3-a456-426614174002"
+          createdAt: "2023-01-01T00:00:00+09:00"
