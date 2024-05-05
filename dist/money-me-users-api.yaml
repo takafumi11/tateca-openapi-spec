@@ -10,13 +10,12 @@ paths:
     post:
       tags:
         - users
-      summary: create-user-api
+      summary: Create a new user
       description: This endpoint creates a new user in the system.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-
       requestBody:
-        description: Body to be inserted
+        description: Body containing user details
         required: true
         content:
           application/json:
@@ -25,10 +24,9 @@ paths:
             examples:
               regular:
                 $ref: '#/components/examples/CreateUserRequestExample'
-
       responses:
         '201':
-          description: A user is created successfully.
+          description: User created successfully.
           content:
             application/json:
               schema:
@@ -41,14 +39,13 @@ paths:
     patch:
       tags:
         - users
-      summary: update-user-api
-      description: This endpoint updates a user's email(for now)
+      summary: Update a user's details
+      description: This endpoint updates a user's details, currently limited to email.
       parameters:
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/UserUuid'
-
       requestBody:
-        description: Body to be updated
+        description: Body containing updated user details
         required: true
         content:
           application/json:
@@ -59,7 +56,7 @@ paths:
                 $ref: '#/components/examples/UpdateUserRequestExample'
       responses:
         '200':
-          description: A user is created successfully.
+          description: User updated successfully.
           content:
             application/json:
               schema:
@@ -72,15 +69,14 @@ paths:
     get:
       tags:
         - groups
-      summary: get-group
-      description: THis endpoint provides group's info
+      summary: Retrieve group information
+      description: This endpoint provides information about a specific group.
       parameters:
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/GroupIdPath'
-
       responses:
-        '201':
-          description: The group has been created.
+        '200':
+          description: Group information retrieved successfully.
           content:
             application/json:
               schema:
@@ -92,25 +88,13 @@ paths:
     post:
       tags:
         - groups
-      summary: crete-group
+      summary: Create a new group
       description: |
-        ## Dependencies
-        - MySQL
-          - groups
-          - users
-          - user_groups
-
-        ## Inner Spec
-        ### What will happen when this API is called.
-        - Create group with the group name and new record will be inserted into __groups__ table
-        - Create user with the users name and new record will be inserted into __users__ table
-        - New records will be inserted into __user_group__ table.
-
+        This endpoint creates a new group and inserts records into the groups, users, and user_groups tables.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-
       requestBody:
-        description: body to set crated.
+        description: Body containing group creation details
         required: true
         content:
           application/json:
@@ -121,7 +105,7 @@ paths:
                 $ref: '#/components/examples/CreateGroupRequestBodyExample'
       responses:
         '201':
-          description: The group has been created.
+          description: Group created successfully.
           content:
             application/json:
               schema:
@@ -130,24 +114,29 @@ paths:
                 regular:
                   $ref: '#/components/examples/CreateGroupResponseExample'
         '400':
-          description: Invalid request, headers or body
+          description: Invalid request due to incorrect headers or body.
         '401':
-          description: Unauthorized
+          description: Unauthorized access.
         '500':
-          description: DB, dependency or unknown system error.
+          description: Internal server error due to database or dependency issues.
 
-  /loans:
+  /groups/{groupId}/loans:
     post:
       tags:
         - loans
-      summary: create-loan
-      description: new loan will be created
-
+      summary: Create a new loan
+      description: This endpoint creates a new loan associated with a group.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-
+        - name: groupId
+          in: path
+          description: The unique identifier of the group
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
-        description: body to set crated.
+        description: Body containing loan details
         required: true
         content:
           application/json:
@@ -158,7 +147,7 @@ paths:
                 $ref: '#/components/examples/CreateLoanRequestExample'
       responses:
         '201':
-          description: Loan was created successfully.
+          description: Loan created successfully.
           content:
             application/json:
               schema:
@@ -166,18 +155,23 @@ paths:
               examples:
                 regular:
                   $ref: '#/components/examples/CreateLoanResponseExample'
-  /repayments:
+  /groups/{groupId}/repayments:
     post:
       tags:
         - repayments
-      summary: crete-repayment
-      description: new repayment will be created
-
+      summary: Create a new repayment
+      description: This endpoint creates a new repayment for a loan within a group.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-
+        - name: groupId
+          in: path
+          description: The unique identifier of the group
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
-        description: body to set crated.
+        description: Body containing repayment details
         required: true
         content:
           application/json:
@@ -188,7 +182,7 @@ paths:
                 $ref: '#/components/examples/CreateRepaymentRequestExample'
       responses:
         '201':
-          description: Loan was created successfully.
+          description: Repayment created successfully.
           content:
             application/json:
               schema:
@@ -197,23 +191,31 @@ paths:
                 regular:
                   $ref: '#/components/examples/CreateRepaymentResponseExample'
 
-  /transactions:
+  /groups/{groupId}/transactions:
     get:
       tags:
         - transactions
-      summary: get-transactions
-      description: Get latest n transaction histories.
+      summary: Retrieve transaction histories
+      description: Get the latest transaction histories up to a specified count.
       parameters:
         - $ref: '#/components/parameters/Authorization'
+        - name: groupId
+          in: path
+          description: The unique identifier of the group
+          required: true
+          schema:
+            type: string
+            format: uuid
         - name: count
           in: query
-          description: The number of transactions returned.
+          description: The number of transactions to return. If not specified, a default value is used.
           required: false
           schema:
             type: integer
+            default: 10
       responses:
         '200':
-          description: A list of transactions.
+          description: A list of transactions retrieved successfully.
           content:
             application/json:
               schema:
@@ -229,38 +231,38 @@ paths:
                 regular:
                   $ref: '#/components/examples/GetTransactionsResponseExample'
 
-  /balance/{groupId}:
+  /group/{groupId}/transactions/settlements:
     get:
       tags:
-        - balances
-      summary: get-balances
-      description: Get latest user's balance
+        - settlements
+      summary: Calculate settlements within a group
+      description: Retrieve the minimal cash flow among group members to settle their debts.
       parameters:
         - $ref: '#/components/parameters/Authorization'
         - name: groupId
           in: path
-          description: The groupId used to get balance
+          description: The unique identifier of the group
           required: true
           schema:
             type: string
             format: uuid
       responses:
         '200':
-          description: A list of balances.
+          description: Settlements calculated successfully.
           content:
             application/json:
               schema:
                 type: object
                 required:
-                  - balances
+                  - transactions
                 properties:
                   transactions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/GetUserBalancesResponse'
+                      $ref: '#/components/schemas/GetGroupTransactionSettlementsResponse'
               examples:
                 regular:
-                  $ref: '#/components/examples/GetUserBalancesResponseExample'
+                  $ref: '#/components/examples/GetGroupTransactionSettlementsResponseExample'
 components:
   parameters:
     Authorization:
@@ -454,20 +456,20 @@ components:
           format: date-time
           description: "Update date."
 
-    GetUserBalancesResponse:
+    GetGroupTransactionSettlementsResponse:
       type: object
       required:
-        - target
+        - from
+        - to
         - amount
       properties:
-        target:
-          type: string
-          format: user
-          description: target user for both repayment and loan
+        from:
+          $ref: '#/components/schemas/UserResponse'
+        to:
+          $ref: '#/components/schemas/UserResponse'
         amount:
           type: number
           format: decimal
-          description: positive or negative amount.
 
     GetTransactionsResponse:
       type: object
@@ -850,8 +852,36 @@ components:
           target_user: "123e4567-e89b-12d3-a456-426614174002"
           createdAt: "2023-01-01T00:00:00+09:00"
 
-    GetUserBalancesResponseExample:
+    GetGroupTransactionSettlementsResponseExample:
       value:
-        balances:
-        - target: "123e4567-e89b-12d3-a456-426614174000"
-          amount: "-2000"
+        transactions:
+          - from:
+              uuid: "9981347a-5d9b-474d-bc8e-fadb06914384"
+              user_name: "test1"
+              email: null
+              auth_user_id: null
+              created_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+              updated_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+            to:
+              uuid: "4b82aece-68ca-4e77-a511-f4e3670b0647"
+              user_name: "test3"
+              email: null
+              auth_user_id: null
+              created_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+              updated_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+            amount: 10000.00
+          - from:
+              uuid: "9981347a-5d9b-474d-bc8e-fadb06914384"
+              user_name: "test1"
+              email: null
+              auth_user_id: null
+              created_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+              updated_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+            to:
+              uuid: "49b63d27-9911-4bd8-8924-7fcb2ed49189"
+              user_name: "test2"
+              email: null
+              auth_user_id: null
+              created_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+              updated_at: "2024-05-05T17:34:23+09:00[Asia/Tokyo]"
+            amount: 5000.00
