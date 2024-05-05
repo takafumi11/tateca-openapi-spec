@@ -228,6 +228,39 @@ paths:
               examples:
                 regular:
                   $ref: '#/components/examples/GetTransactionsResponseExample'
+
+  /balance/{groupId}:
+    get:
+      tags:
+        - balances
+      summary: get-balances
+      description: Get latest user's balance
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - name: groupId
+          in: path
+          description: The groupId used to get balance
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: A list of balances.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - balances
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GetUserBalancesResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/GetUserBalancesResponseExample'
 components:
   parameters:
     Authorization:
@@ -420,6 +453,21 @@ components:
           type: string
           format: date-time
           description: "Update date."
+
+    GetUserBalancesResponse:
+      type: object
+      required:
+        - target
+        - amount
+      properties:
+        target:
+          type: string
+          format: user
+          description: target user for both repayment and loan
+        amount:
+          type: number
+          format: decimal
+          description: positive or negative amount.
 
     GetTransactionsResponse:
       type: object
@@ -784,6 +832,7 @@ components:
 
     GetTransactionsResponseExample:
       value:
+        transactions:
         - transaction_id: "123e4567-e89b-12d3-a456-426614174000"
           transaction_type: LOAN
           title: "Monthly Installment"
@@ -800,3 +849,9 @@ components:
           payer: "123e4567-e89b-12d3-a456-426614174001"
           target_user: "123e4567-e89b-12d3-a456-426614174002"
           createdAt: "2023-01-01T00:00:00+09:00"
+
+    GetUserBalancesResponseExample:
+      value:
+        balances:
+        - target: "123e4567-e89b-12d3-a456-426614174000"
+          amount: "-2000"
