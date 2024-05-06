@@ -35,7 +35,7 @@ paths:
                 regular:
                   $ref: '#/components/examples/CreateUpdateUserResponseExample'
 
-  /users/{uuid}:
+  /users/{userId}:
     patch:
       tags:
         - users
@@ -43,7 +43,7 @@ paths:
       description: This endpoint updates a user's details, currently limited to email.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-        - $ref: '#/components/parameters/UserUuid'
+        - $ref: '#/components/parameters/UserId'
       requestBody:
         description: Body containing updated user details
         required: true
@@ -66,25 +66,6 @@ paths:
                   $ref: '#/components/examples/CreateUpdateUserResponseExample'
 
   /groups:
-    get:
-      tags:
-        - groups
-      summary: Retrieve group information
-      description: This endpoint provides information about a specific group.
-      parameters:
-        - $ref: '#/components/parameters/Authorization'
-        - $ref: '#/components/parameters/GroupIdPath'
-      responses:
-        '200':
-          description: Group information retrieved successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetGroupResponse'
-              examples:
-                regular:
-                  $ref: '#/components/examples/CreateGroupResponseExample'
-
     post:
       tags:
         - groups
@@ -120,6 +101,26 @@ paths:
         '500':
           description: Internal server error due to database or dependency issues.
 
+  /groups/{groupId}:
+    get:
+      tags:
+        - groups
+      summary: Retrieve group information
+      description: This endpoint provides information about a specific group.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupId'
+      responses:
+        '200':
+          description: Group information retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateGroupResponseExample'
+
   /groups/{groupId}/loans:
     post:
       tags:
@@ -128,13 +129,7 @@ paths:
       description: This endpoint creates a new loan associated with a group.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-        - name: groupId
-          in: path
-          description: The unique identifier of the group
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/GroupId'
       requestBody:
         description: Body containing loan details
         required: true
@@ -163,13 +158,7 @@ paths:
       description: This endpoint creates a new repayment for a loan within a group.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-        - name: groupId
-          in: path
-          description: The unique identifier of the group
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/GroupId'
       requestBody:
         description: Body containing repayment details
         required: true
@@ -191,21 +180,15 @@ paths:
                 regular:
                   $ref: '#/components/examples/CreateRepaymentResponseExample'
 
-  /groups/{groupId}/transactions:
+  /groups/{groupId}/transactions/history:
     get:
       tags:
         - transactions
-      summary: Retrieve transaction histories
+      summary: Retrieve transactions history
       description: Get the latest transaction histories up to a specified count.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-        - name: groupId
-          in: path
-          description: The unique identifier of the group
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/GroupId'
         - name: count
           in: query
           description: The number of transactions to return. If not specified, a default value is used.
@@ -231,21 +214,15 @@ paths:
                 regular:
                   $ref: '#/components/examples/GetTransactionsResponseExample'
 
-  /group/{groupId}/transactions/settlements:
+  /groups/{groupId}/transactions/settlement:
     get:
       tags:
-        - settlements
+        - transactions
       summary: Calculate settlements within a group
       description: Retrieve the minimal cash flow among group members to settle their debts.
       parameters:
         - $ref: '#/components/parameters/Authorization'
-        - name: groupId
-          in: path
-          description: The unique identifier of the group
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/GroupId'
       responses:
         '200':
           description: Settlements calculated successfully.
@@ -274,24 +251,23 @@ components:
         type: string
         format: JWT
         example: "J.W.T"
-    UserUuid:
-      name: uuid
+    UserId:
+      name: userId
       in: path
       required: true
-      description: user's uuid updated.
+      description: The unique identifier of the user
       schema:
         type: string
         format: uuid
         example: "789e4567-e89b-12d3-a456-426614174000"
-    GroupIdPath:
-      name: uuid
+    GroupId:
+      name: groupId
       in: path
+      description: The unique identifier of the group
       required: true
-      description: Group's uuid.
       schema:
         type: string
         format: uuid
-        example: "789e4567-e89b-12d3-a456-426614174000"
 
   schemas:
     CreateUserRequest:
