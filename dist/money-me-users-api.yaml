@@ -193,6 +193,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoanResponse'
+    delete:
+      tags:
+        - loans
+      summary: Delete a loan
+      description: This endpoint deletes a specific loan within a specified group.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/LoanId'
+      responses:
+        '204':
+          description: Loan deleted successfully.
+
   /groups/{groupId}/repayments:
     post:
       tags:
@@ -307,6 +320,14 @@ components:
       name: groupId
       in: path
       description: The unique identifier of the group
+      required: true
+      schema:
+        type: string
+        format: uuid
+    LoanId:
+      name: loanId
+      in: path
+      description: The unique identifier of the loan
       required: true
       schema:
         type: string
