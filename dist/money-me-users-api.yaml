@@ -279,6 +279,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RepaymentResponse'
+
+    delete:
+      tags:
+        - repayments
+      summary: Delete a repayment
+      description: This endpoint deletes a specific repayment within a specified group.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/RepaymentId'
+      responses:
+        '204':
+          description: Repayment deleted successfully.
+  
   /groups/{groupId}/transactions/history:
     get:
       tags:
