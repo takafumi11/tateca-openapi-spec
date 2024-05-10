@@ -150,6 +150,26 @@ paths:
               examples:
                 regular:
                   $ref: '#/components/examples/CreateLoanResponseExample'
+  /groups/{groupId}/loans/{loanId}:
+    get:
+      tags:
+        - loans
+      summary: Retrieve loan details
+      description: This endpoint retrieves details of a specific loan within a specified group.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/LoanId'
+      responses:
+        '200':
+          description: Loan details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateLoanResponseExample'
   /groups/{groupId}/repayments:
     post:
       tags:
