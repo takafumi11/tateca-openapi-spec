@@ -170,6 +170,29 @@ paths:
               examples:
                 regular:
                   $ref: '#/components/examples/CreateLoanResponseExample'
+    patch:
+      tags:
+        - loans
+      summary: Update loan details
+      description: This endpoint updates details of a specific loan within a specified group.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/LoanId'
+      requestBody:
+        description: Body containing updated loan details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoanRequest'
+      responses:
+        '200':
+          description: Loan updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanResponse'
   /groups/{groupId}/repayments:
     post:
       tags:
