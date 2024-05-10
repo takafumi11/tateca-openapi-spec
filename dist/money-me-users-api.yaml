@@ -256,6 +256,29 @@ paths:
               examples:
                 regular:
                   $ref: '#/components/examples/CreateRepaymentResponseExample'
+    patch:
+      tags:
+        - repayments
+      summary: Update repayment details
+      description: This endpoint updates details of a specific repayment within a specified group.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/RepaymentId'
+      requestBody:
+        description: Body containing updated repayment details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRepaymentRequest'
+      responses:
+        '200':
+          description: Repayment updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepaymentResponse'
   /groups/{groupId}/transactions/history:
     get:
       tags:
