@@ -236,6 +236,26 @@ paths:
                 regular:
                   $ref: '#/components/examples/CreateRepaymentResponseExample'
 
+  /groups/{groupId}/repayments/{repaymentId}:
+    get:
+      tags:
+        - repayments
+      summary: Retrieve repayment details
+      description: This endpoint retrieves details of a specific repayment within a specified group.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/GroupId'
+        - $ref: '#/components/parameters/RepaymentId'
+      responses:
+        '200':
+          description: Repayment details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRepaymentResponse'
+              examples:
+                regular:
+                  $ref: '#/components/examples/CreateRepaymentResponseExample'
   /groups/{groupId}/transactions/history:
     get:
       tags:
@@ -328,6 +348,14 @@ components:
       name: loanId
       in: path
       description: The unique identifier of the loan
+      required: true
+      schema:
+        type: string
+        format: uuid
+    RepaymentId:
+      name: repaymentId
+      in: path
+      description: The unique identifier of the repayment
       required: true
       schema:
         type: string
