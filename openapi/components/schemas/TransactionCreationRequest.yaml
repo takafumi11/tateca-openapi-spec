@@ -1,0 +1,36 @@
+type: object
+required:
+  - title
+  - amount
+  - payerId
+  - participants
+  - transactionDate
+properties:
+  title:
+    type: string
+    description: Transaction title
+    example: "Dinner at Restaurant"
+  amount:
+    type: number
+    format: decimal
+    description: Transaction amount
+    example: 120.50
+  payerId:
+    type: string
+    format: uuid
+    description: UUID of the user who paid
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  participants:
+    type: array
+    description: List of transaction participants
+    items:
+      $ref: './TransactionParticipant.yaml'
+  transactionDate:
+    type: string
+    format: date-time
+    description: Transaction date and time
+    example: "2023-12-25T19:30:00Z"
+  description:
+    type: string
+    description: Additional transaction details
+    example: "Team dinner after project completion"

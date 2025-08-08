@@ -1,0 +1,25 @@
+type: object
+required:
+  - baseCurrency
+  - date
+  - rates
+properties:
+  baseCurrency:
+    type: string
+    description: Base currency code
+    example: "JPY"
+  date:
+    type: string
+    format: date
+    description: Exchange rate date
+    example: "2023-12-25"
+  rates:
+    type: object
+    additionalProperties:
+      type: number
+      format: decimal
+    description: Exchange rates for different currencies
+    example:
+      USD: 0.0067
+      EUR: 0.0061
+      GBP: 0.0053

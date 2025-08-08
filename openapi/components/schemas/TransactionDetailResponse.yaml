@@ -1,0 +1,50 @@
+type: object
+required:
+  - id
+  - title
+  - amount
+  - payer
+  - participants
+  - transactionDate
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Transaction UUID
+    example: "456e7890-a1b2-3c4d-5e6f-789012345678"
+  title:
+    type: string
+    description: Transaction title
+    example: "Dinner at Restaurant"
+  amount:
+    type: number
+    format: decimal
+    description: Total transaction amount
+    example: 120.50
+  payer:
+    $ref: './UserResponse.yaml'
+  participants:
+    type: array
+    items:
+      $ref: './TransactionParticipantDetail.yaml'
+  transactionDate:
+    type: string
+    format: date-time
+    description: Transaction date and time
+    example: "2023-12-25T19:30:00Z"
+  description:
+    type: string
+    description: Additional transaction details
+    example: "Team dinner after project completion"
+  createdAt:
+    type: string
+    format: date-time
+    description: Transaction creation timestamp
+    example: "2023-12-25T20:00:00Z"
+  updatedAt:
+    type: string
+    format: date-time
+    description: Last update timestamp
+    example: "2023-12-25T20:00:00Z"

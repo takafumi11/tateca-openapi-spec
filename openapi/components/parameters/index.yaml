@@ -1,0 +1,38 @@
+UidPath:
+  name: uid
+  in: path
+  required: true
+  description: User identifier
+  schema:
+    type: string
+    example: "user123"
+
+UserIdPath:
+  name: userId
+  in: path
+  required: true
+  description: User UUID
+  schema:
+    type: string
+    format: uuid
+    example: "123e4567-e89b-12d3-a456-426614174000"
+
+GroupIdPath:
+  name: groupId
+  in: path
+  required: true
+  description: Group UUID
+  schema:
+    type: string
+    format: uuid
+    example: "987fcdeb-51a2-43d7-8f4c-123456789abc"
+
+TransactionIdPath:
+  name: transactionId
+  in: path
+  required: true
+  description: Transaction UUID
+  schema:
+    type: string
+    format: uuid
+    example: "456e7890-a1b2-3c4d-5e6f-789012345678"

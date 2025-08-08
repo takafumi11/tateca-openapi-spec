@@ -1,0 +1,13 @@
+type: object
+required:
+  - name
+  - description
+properties:
+  name:
+    type: string
+    description: Group name
+    example: "Travel Group 2024"
+  description:
+    type: string
+    description: Group description
+    example: "Group for managing travel expenses"

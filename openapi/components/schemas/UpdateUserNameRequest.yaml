@@ -1,0 +1,8 @@
+type: object
+required:
+  - name
+properties:
+  name:
+    type: string
+    description: New user name
+    example: "Jane Smith"

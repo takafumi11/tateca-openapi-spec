@@ -1,0 +1,19 @@
+get:
+  tags:
+    - Transactions
+  summary: Get transaction settlement
+  description: Calculate and retrieve settlement information for a group
+  operationId: getTransactionSettlement
+  parameters:
+    - $ref: '../components/parameters/index.yaml#/GroupIdPath'
+  responses:
+    '200':
+      description: Successfully retrieved settlement information
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/TransactionSettlementResponse.yaml'
+    '404':
+      $ref: '../components/responses/index.yaml#/NotFound'
+    '500':
+      $ref: '../components/responses/index.yaml#/InternalServerError'

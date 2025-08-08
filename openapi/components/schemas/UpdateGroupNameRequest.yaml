@@ -1,0 +1,8 @@
+type: object
+required:
+  - name
+properties:
+  name:
+    type: string
+    description: New group name
+    example: "Updated Travel Group"

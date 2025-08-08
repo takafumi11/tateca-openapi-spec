@@ -1,0 +1,42 @@
+AuthUserRequest:
+  $ref: './AuthUserRequest.yaml'
+AuthUserResponse:
+  $ref: './AuthUserResponse.yaml'
+UpdateUserNameRequest:
+  $ref: './UpdateUserNameRequest.yaml'
+UserResponse:
+  $ref: './UserResponse.yaml'
+CreateGroupRequest:
+  $ref: './CreateGroupRequest.yaml'
+UpdateGroupNameRequest:
+  $ref: './UpdateGroupNameRequest.yaml'
+JoinGroupRequest:
+  $ref: './JoinGroupRequest.yaml'
+GroupDetailsResponse:
+  $ref: './GroupDetailsResponse.yaml'
+GroupListResponse:
+  $ref: './GroupListResponse.yaml'
+GroupSummary:
+  $ref: './GroupSummary.yaml'
+TransactionCreationRequest:
+  $ref: './TransactionCreationRequest.yaml'
+TransactionParticipant:
+  $ref: './TransactionParticipant.yaml'
+TransactionDetailResponse:
+  $ref: './TransactionDetailResponse.yaml'
+TransactionParticipantDetail:
+  $ref: './TransactionParticipantDetail.yaml'
+TransactionHistoryResponse:
+  $ref: './TransactionHistoryResponse.yaml'
+TransactionSummary:
+  $ref: './TransactionSummary.yaml'
+TransactionSettlementResponse:
+  $ref: './TransactionSettlementResponse.yaml'
+Settlement:
+  $ref: './Settlement.yaml'
+ExchangeRateResponse:
+  $ref: './ExchangeRateResponse.yaml'
+LambdaResponse:
+  $ref: './LambdaResponse.yaml'
+Error:
+  $ref: './Error.yaml'

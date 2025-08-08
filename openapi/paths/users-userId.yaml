@@ -1,0 +1,27 @@
+patch:
+  tags:
+    - Users
+  summary: Update user name
+  description: Update the name of a specific user
+  operationId: updateUserName
+  parameters:
+    - $ref: '../components/parameters/index.yaml#/UserIdPath'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/UpdateUserNameRequest.yaml'
+  responses:
+    '200':
+      description: User name successfully updated
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/UserResponse.yaml'
+    '400':
+      $ref: '../components/responses/index.yaml#/BadRequest'
+    '404':
+      $ref: '../components/responses/index.yaml#/NotFound'
+    '500':
+      $ref: '../components/responses/index.yaml#/InternalServerError'

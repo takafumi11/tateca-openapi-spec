@@ -1,0 +1,15 @@
+type: object
+required:
+  - from
+  - to
+  - amount
+properties:
+  from:
+    $ref: './UserResponse.yaml'
+  to:
+    $ref: './UserResponse.yaml'
+  amount:
+    type: number
+    format: decimal
+    description: Amount to be settled
+    example: 50.25

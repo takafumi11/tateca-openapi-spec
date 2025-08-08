@@ -1,0 +1,36 @@
+type: object
+required:
+  - uid
+  - name
+  - email
+  - currencyCode
+  - createdAt
+  - updatedAt
+properties:
+  uid:
+    type: string
+    description: User identifier
+    example: "user123"
+  name:
+    type: string
+    description: User's display name
+    example: "John Doe"
+  email:
+    type: string
+    format: email
+    description: User's email address
+    example: "john.doe@example.com"
+  currencyCode:
+    type: string
+    description: Preferred currency code
+    example: "USD"
+  createdAt:
+    type: string
+    format: date-time
+    description: Account creation timestamp
+    example: "2023-12-25T10:30:00Z"
+  updatedAt:
+    type: string
+    format: date-time
+    description: Last update timestamp
+    example: "2023-12-25T10:30:00Z"

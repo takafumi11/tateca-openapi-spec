@@ -1,0 +1,8 @@
+type: object
+required:
+  - invitationToken
+properties:
+  invitationToken:
+    type: string
+    description: Invitation token for joining the group
+    example: "abc123def456"

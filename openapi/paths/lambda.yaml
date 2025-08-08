@@ -1,0 +1,17 @@
+get:
+  tags:
+    - Lambda
+  summary: Get currency code
+  description: Get currency code for the authenticated user
+  operationId: getCurrencyCode
+  responses:
+    '200':
+      description: Successfully retrieved currency code
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/LambdaResponse.yaml'
+    '401':
+      description: Unauthorized - Invalid API key
+    '500':
+      $ref: '../components/responses/index.yaml#/InternalServerError'
