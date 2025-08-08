@@ -38,5 +38,7 @@ ExchangeRateResponse:
   $ref: './ExchangeRateResponse.yaml'
 LambdaResponse:
   $ref: './LambdaResponse.yaml'
+TokenResponse:
+  $ref: './TokenResponse.yaml'
 Error:
   $ref: './Error.yaml'

@@ -45,6 +45,10 @@ paths:
   # Lambda
   /lambda:
     $ref: './paths/lambda.yaml'
+  
+  # Development
+  /dev/firebase-token/{uid}:
+    $ref: './paths/dev-firebase-token-uid.yaml'
 
 components:
   parameters:
@@ -73,3 +77,5 @@ tags:
     description: Currency exchange rate information
   - name: Lambda
     description: Lambda function endpoints
+  - name: Development
+    description: Development and testing endpoints
