@@ -41,8 +41,8 @@ jobs:
         npx @redocly/cli build-docs openapi/openapi.yaml \
           --title "Tateca API Documentation" \
           --output docs/index.html \
-          --options.theme.openapi.hideDownloadButton=false \
-          --options.theme.openapi.expandResponses='200,201,400,401,404,500'
+          --theme.openapi.hideDownloadButton=false \
+          --theme.openapi.expandResponses='200,201,400,401,404,500'
     
     - name: Create custom assets
       run: |
