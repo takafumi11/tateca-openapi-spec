@@ -35,7 +35,7 @@ properties:
     items:
       $ref: './UserResponse.yaml'
     description: List of users in the group
-  transactionCount:
+  transaction_count:
     type: integer
     format: int64
     description: Number of transactions in the group

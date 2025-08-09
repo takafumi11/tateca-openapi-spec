@@ -1,12 +1,12 @@
 type: object
 required:
-  - id
+  - uuid
   - name
-  - email
-  - createdAt
-  - updatedAt
+  - auth_user
+  - created_at
+  - updated_at
 properties:
-  id:
+  uuid:
     type: string
     format: uuid
     description: User UUID
@@ -15,18 +15,13 @@ properties:
     type: string
     description: User's name
     example: "Jane Smith"
-  email:
+  auth_user:
+    $ref: './AuthUserResponse.yaml'
+  created_at:
     type: string
-    format: email
-    description: User's email address
-    example: "jane.smith@example.com"
-  createdAt:
+    description: Account creation timestamp in Tokyo time
+    example: "2023-12-25 19:30:00"
+  updated_at:
     type: string
-    format: date-time
-    description: Account creation timestamp
-    example: "2023-12-25T10:30:00Z"
-  updatedAt:
-    type: string
-    format: date-time
-    description: Last update timestamp
-    example: "2023-12-25T10:30:00Z"
+    description: Last update timestamp in Tokyo time
+    example: "2023-12-25 19:30:00"
