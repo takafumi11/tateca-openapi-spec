@@ -13,8 +13,3 @@ properties:
     format: email
     description: User's email address
     example: "john.doe@example.com"
-  currencyCode:
-    type: string
-    description: Preferred currency code
-    example: "USD"
-    enum: ["USD", "EUR", "JPY", "GBP", "CAD", "AUD"]
