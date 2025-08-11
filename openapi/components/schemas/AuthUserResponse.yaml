@@ -40,3 +40,11 @@ properties:
     type: integer
     description: Total number of user logins
     example: 42
+  last_app_review_dialog_shown_at:
+    type: string
+    format: date-time
+    nullable: true
+    description: Last time the app review dialog was shown to the user (nullable)
+    example: "2023-12-25T10:30:00+09:00"
+  app_review_status:
+    $ref: '../schemas/AppReviewStatus.yaml'
