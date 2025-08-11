@@ -149,3 +149,7 @@ graph LR
 - **GitHub Actions**: Automated workflows and deployments
 - **GitHub Pages**: Automated documentation publishing
 - **Git Hooks**: Pre-commit validation and formatting
+
+### GitHub Integration Tools
+- **GitHub CLI**: Use the [GitHub CLI](https://cli.github.com/manual/) for command-line GitHub operations such as creating pull requests, managing issues, and repository interactions
+- **GitHub MCP Server**: Alternatively, use the [GitHub MCP Server](https://github.com/github/github-mcp-server) for enhanced integration capabilities and automated GitHub workflows
