@@ -2,12 +2,12 @@ type: object
 required:
   - group
   - users
-  - transactionCount
+  - transaction_count
 properties:
   group:
     type: object
     properties:
-      id:
+      uuid:
         type: string
         format: uuid
         description: Group UUID
@@ -16,20 +16,23 @@ properties:
         type: string
         description: Group name
         example: "Travel Group 2024"
-      description:
+      join_token:
         type: string
-        description: Group description
-        example: "Group for managing travel expenses"
-      createdAt:
+        format: uuid
+        description: Token for joining the group
+        example: "123e4567-e89b-12d3-a456-426614174000"
+      token_expires:
         type: string
-        format: date-time
+        description: When the join token expires
+        example: "2024-12-25T10:30:00"
+      created_at:
+        type: string
         description: Group creation timestamp
-        example: "2023-12-25T10:30:00Z"
-      updatedAt:
+        example: "2023-12-25T10:30:00 JST"
+      updated_at:
         type: string
-        format: date-time
         description: Last update timestamp
-        example: "2023-12-25T10:30:00Z"
+        example: "2023-12-25T10:30:00 JST"
   users:
     type: array
     items:

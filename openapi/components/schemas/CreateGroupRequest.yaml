@@ -1,20 +1,12 @@
 type: object
 required:
-  - group_name
-  - host_name
-  - participants_name
+  - name
 properties:
-  group_name:
+  name:
     type: string
-    description: Name of the group to be created
-    example: "Weekend Trip"
-  host_name:
+    description: Group name
+    example: "Travel Group 2024"
+  description:
     type: string
-    description: Name of the person creating the group
-    example: "John Doe"
-  participants_name:
-    type: array
-    description: List of group member names
-    items:
-      type: string
-    example: ["Alice Smith", "Bob Johnson", "Carol Brown"]
+    description: Group description
+    example: "Group for managing travel expenses"
