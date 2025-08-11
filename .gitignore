@@ -173,3 +173,4 @@ out/
 # Build artifacts that should be regenerated
 build/
 out/
+MIGRATION_COMPLETED.md

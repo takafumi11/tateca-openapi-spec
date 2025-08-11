@@ -7,6 +7,15 @@ UidPath:
     type: string
     example: "user123"
 
+ApiKeyHeader:
+  name: X-API-KEY
+  in: header
+  required: true
+  description: API key for Lambda system authentication
+  schema:
+    type: string
+    example: "your-api-key-here"
+
 UserIdPath:
   name: userId
   in: path

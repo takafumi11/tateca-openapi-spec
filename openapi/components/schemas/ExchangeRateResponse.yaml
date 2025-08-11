@@ -1,25 +1,41 @@
 type: object
 required:
-  - baseCurrency
-  - date
-  - rates
+  - currency_code
+  - jp_currency_name
+  - eng_currency_name
+  - jp_country_name
+  - eng_country_name
+  - currency_symbol
+  - symbol_position
+  - exchange_rate
 properties:
-  baseCurrency:
+  currency_code:
     type: string
-    description: Base currency code
-    example: "JPY"
-  date:
+    description: Currency code
+    example: "USD"
+  jp_currency_name:
     type: string
-    format: date
-    description: Exchange rate date
-    example: "2023-12-25"
-  rates:
-    type: object
-    additionalProperties:
-      type: number
-      format: decimal
-    description: Exchange rates for different currencies
-    example:
-      USD: 0.0067
-      EUR: 0.0061
-      GBP: 0.0053
+    description: Japanese currency name
+    example: "米ドル"
+  eng_currency_name:
+    type: string
+    description: English currency name
+    example: "US Dollar"
+  jp_country_name:
+    type: string
+    description: Japanese country name
+    example: "アメリカ"
+  eng_country_name:
+    type: string
+    description: English country name
+    example: "United States"
+  currency_symbol:
+    type: string
+    description: Currency symbol
+    example: "$"
+  symbol_position:
+    $ref: './SymbolPosition.yaml'
+  exchange_rate:
+    type: string
+    description: Exchange rate as string
+    example: "150.25"

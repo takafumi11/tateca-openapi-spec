@@ -4,9 +4,8 @@ required:
   - transaction_type
   - title
   - amount
-  - payer
-  - exchangeRate
-  - date_str
+  - exchange_rate
+  - date
 properties:
   transaction_id:
     type: string
@@ -20,22 +19,11 @@ properties:
     example: "Dinner at Restaurant"
   amount:
     type: integer
-    format: int64
     description: Transaction amount
     example: 1200
-  payer:
-    $ref: './UserResponse.yaml'
-  exchangeRate:
+  exchange_rate:
     $ref: './ExchangeRateResponse.yaml'
-  date_str:
+  date:
     type: string
     description: Transaction date (Tokyo time)
     example: "2023-12-25 19:30:00"
-  loan:
-    $ref: './LoanDetailResponse.yaml'
-    nullable: true
-    description: Loan details (nullable)
-  repayment:
-    $ref: './RepaymentDetailResponse.yaml'
-    nullable: true
-    description: Repayment details (nullable)

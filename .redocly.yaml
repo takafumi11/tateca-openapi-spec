@@ -13,6 +13,7 @@ apis:
       path-parameters-defined: error
       no-server-example.com: off
       info-license-strict: off
+      struct: off
 
 # Redoc最適化設定
 theme:
