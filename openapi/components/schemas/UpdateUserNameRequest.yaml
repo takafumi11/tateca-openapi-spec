@@ -1,8 +1,8 @@
 type: object
 required:
-  - name
+  - user_name
 properties:
-  name:
+  user_name:
     type: string
     description: New user name
     example: "Jane Smith"
