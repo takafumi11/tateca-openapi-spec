@@ -1,8 +1,36 @@
 type: object
 required:
-  - groups
+  - group_list
 properties:
-  groups:
+  group_list:
     type: array
+    description: List of groups the user belongs to
     items:
-      $ref: './GroupSummary.yaml'
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: Group UUID
+          example: "987fcdeb-51a2-43d7-8f4c-123456789abc"
+        name:
+          type: string
+          description: Group name
+          example: "Travel Group 2024"
+        join_token:
+          type: string
+          format: uuid
+          description: Token for joining the group
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        token_expires:
+          type: string
+          description: When the join token expires
+          example: "2024-12-25T10:30:00"
+        created_at:
+          type: string
+          description: Group creation timestamp
+          example: "2023-12-25T10:30:00 JST"
+        updated_at:
+          type: string
+          description: Last update timestamp
+          example: "2023-12-25T10:30:00 JST"
