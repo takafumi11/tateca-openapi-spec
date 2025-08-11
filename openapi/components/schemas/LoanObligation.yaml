@@ -1,15 +1,12 @@
 type: object
 required:
-  - from
-  - to
+  - user
   - amount
 properties:
-  from:
-    $ref: './UserResponse.yaml'
-  to:
+  user:
     $ref: './UserResponse.yaml'
   amount:
     type: integer
     format: int64
-    description: Settlement amount
+    description: Amount owed
     example: 1500

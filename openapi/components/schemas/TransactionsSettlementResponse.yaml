@@ -1,0 +1,9 @@
+type: object
+required:
+  - transactions_settlement
+properties:
+  transactions_settlement:
+    type: array
+    description: Array of settlement items
+    items:
+      $ref: './Settlement.yaml'

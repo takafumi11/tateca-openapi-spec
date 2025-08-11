@@ -19,7 +19,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas/ExchangeRateResponse.yaml'
+            $ref: '../components/schemas/ExchangeRateListResponse.yaml'
     '400':
       $ref: '../components/responses/index.yaml#/BadRequest'
     '500':

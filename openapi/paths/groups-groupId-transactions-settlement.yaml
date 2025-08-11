@@ -12,7 +12,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas/TransactionSettlementResponse.yaml'
+            $ref: '../components/schemas/TransactionsSettlementResponse.yaml'
     '404':
       $ref: '../components/responses/index.yaml#/NotFound'
     '500':

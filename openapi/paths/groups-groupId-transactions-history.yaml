@@ -21,7 +21,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas/TransactionHistoryResponse.yaml'
+            $ref: '../components/schemas/TransactionsHistoryResponse.yaml'
     '404':
       $ref: '../components/responses/index.yaml#/NotFound'
     '500':

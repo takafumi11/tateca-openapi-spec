@@ -18,5 +18,7 @@ get:
         application/json:
           schema:
             $ref: '../components/schemas/TokenResponse.yaml'
+    '400':
+      $ref: '../components/responses/index.yaml#/BadRequest'
     '500':
       $ref: '../components/responses/index.yaml#/InternalServerError'

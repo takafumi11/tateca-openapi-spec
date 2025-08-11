@@ -2,7 +2,6 @@ type: object
 required:
   - name
   - email
-  - currencyCode
 properties:
   name:
     type: string
