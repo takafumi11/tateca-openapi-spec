@@ -1,3 +1,5 @@
+AppReviewStatus:
+  $ref: './AppReviewStatus.yaml'
 AuthUserRequest:
   $ref: './AuthUserRequest.yaml'
 AuthUserResponse:
