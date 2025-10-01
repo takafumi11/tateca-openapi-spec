@@ -29,6 +29,8 @@ paths:
     $ref: './paths/groups-groupId.yaml'
   /groups/list:
     $ref: './paths/groups-list.yaml'
+  /groups/{groupId}/users/{userUuid}:
+    $ref: './paths/groups-groupId-users-userUuid.yaml'
   
   # Transactions
   /groups/{groupId}/transactions:
