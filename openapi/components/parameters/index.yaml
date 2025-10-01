@@ -45,3 +45,13 @@ TransactionIdPath:
     type: string
     format: uuid
     example: "456e7890-a1b2-3c4d-5e6f-789012345678"
+
+UserUuidPath:
+  name: userUuid
+  in: path
+  required: true
+  description: User UUID
+  schema:
+    type: string
+    format: uuid
+    example: "123e4567-e89b-12d3-a456-426614174000"
