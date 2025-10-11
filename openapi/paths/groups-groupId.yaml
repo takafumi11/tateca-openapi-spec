@@ -20,9 +20,9 @@ get:
 patch:
   tags:
     - Groups
-  summary: Update group name
-  description: Update the name of a specific group
-  operationId: updateGroupName
+  summary: Update group
+  description: Update the name and/or currency code of a specific group
+  operationId: updateGroup
   parameters:
     - $ref: '../components/parameters/index.yaml#/GroupIdPath'
   requestBody:
@@ -30,10 +30,10 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../components/schemas/UpdateGroupNameRequest.yaml'
+          $ref: '../components/schemas/UpdateGroupRequest.yaml'
   responses:
     '200':
-      description: Group name successfully updated
+      description: Group successfully updated
       content:
         application/json:
           schema:

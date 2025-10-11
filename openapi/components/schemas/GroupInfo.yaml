@@ -2,6 +2,7 @@ type: object
 required:
   - uuid
   - name
+  - currency_code
   - join_token
   - token_expires
   - created_at
@@ -15,6 +16,11 @@ properties:
     type: string
     description: Group name
     example: "Travel Group 2024"
+  currency_code:
+    type: string
+    description: Currency code for the group (ISO 4217 format)
+    pattern: '^[A-Z]{3}$'
+    example: "JPY"
   join_token:
     type: string
     description: Invitation token as string
