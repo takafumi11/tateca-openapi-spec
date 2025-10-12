@@ -4,8 +4,3 @@ properties:
     type: string
     description: New group name (optional)
     example: "Updated Travel Group"
-  currency_code:
-    type: string
-    description: New currency code for the group (ISO 4217 format, optional)
-    pattern: '^[A-Z]{3}$'
-    example: "USD"

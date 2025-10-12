@@ -18,9 +18,3 @@ properties:
     items:
       type: string
     example: ["Alice Smith", "Bob Johnson"]
-  currency_code:
-    type: string
-    description: Currency code for the group (ISO 4217 format). Defaults to JPY if not provided.
-    pattern: '^[A-Z]{3}$'
-    default: "JPY"
-    example: "USD"

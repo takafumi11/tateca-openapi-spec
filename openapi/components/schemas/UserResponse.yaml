@@ -2,6 +2,7 @@ type: object
 required:
   - uuid
   - name
+  - currency_code
   - created_at
   - updated_at
 properties:
@@ -13,6 +14,11 @@ properties:
     type: string
     description: User's display name
     example: "Jane Smith"
+  currency_code:
+    type: string
+    description: User's preferred currency code (ISO 4217 format)
+    pattern: '^[A-Z]{3}$'
+    example: "JPY"
   auth_user:
     $ref: './AuthUserResponse.yaml'
     nullable: true
