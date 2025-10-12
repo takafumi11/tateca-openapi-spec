@@ -4,8 +4,8 @@ AuthUserRequest:
   $ref: './AuthUserRequest.yaml'
 AuthUserResponse:
   $ref: './AuthUserResponse.yaml'
-UpdateUserNameRequest:
-  $ref: './UpdateUserNameRequest.yaml'
+UpdateUserRequest:
+  $ref: './UpdateUserRequest.yaml'
 UserResponse:
   $ref: './UserResponse.yaml'
 CreateGroupRequest:

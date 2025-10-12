@@ -55,3 +55,14 @@ UserUuidPath:
     type: string
     format: uuid
     example: "123e4567-e89b-12d3-a456-426614174000"
+
+CurrencyCodeQuery:
+  name: currencyCode
+  in: query
+  required: false
+  description: Currency code for settlement calculations (ISO 4217 format). Defaults to JPY if not provided.
+  schema:
+    type: string
+    pattern: '^[A-Z]{3}$'
+    default: "JPY"
+    example: "USD"

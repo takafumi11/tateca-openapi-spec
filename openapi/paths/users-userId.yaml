@@ -1,9 +1,9 @@
 patch:
   tags:
     - Users
-  summary: Update user name
-  description: Update the name of a specific user
-  operationId: updateUserName
+  summary: Update user information
+  description: Update user information including name and currency preference
+  operationId: updateUser
   parameters:
     - $ref: '../components/parameters/index.yaml#/UserIdPath'
   requestBody:
@@ -11,10 +11,10 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../components/schemas/UpdateUserNameRequest.yaml'
+          $ref: '../components/schemas/UpdateUserRequest.yaml'
   responses:
     '200':
-      description: User name successfully updated
+      description: User information successfully updated
       content:
         application/json:
           schema:
