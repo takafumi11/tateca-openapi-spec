@@ -26,6 +26,8 @@ TransactionType:
   $ref: './TransactionType.yaml'
 SymbolPosition:
   $ref: './SymbolPosition.yaml'
+CurrencyName:
+  $ref: './CurrencyName.yaml'
 TransactionCreationRequest:
   $ref: './TransactionCreationRequest.yaml'
 ObligationRequest:
